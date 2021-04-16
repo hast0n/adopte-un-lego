@@ -6,7 +6,7 @@ import {
   RootStackParamList,
   SetsStackScreen,
   PartsStackScreen,
-  MinifigsStacksScreen,
+  MinifigsStackScreen,
 } from "./app-stacks";
 
 // Define main tab navigator
@@ -26,6 +26,8 @@ export const TabNavigator = () => {
                 : "ios-information-circle-outline";
             } else if (route.name === "Parts") {
               iconName = focused ? "ios-list-sharp" : "ios-list-outline";
+            } else if (route.name === "Minifigs") {
+              iconName = focused ? "ios-list-sharp" : "ios-list-outline";
             }
 
             // You can return any component that you like here!
@@ -37,11 +39,7 @@ export const TabNavigator = () => {
           inactiveTintColor: "gray",
         }}
       >
-        <Tab.Screen
-          name="Parts"
-          component={PartsStackScreen}
-          options={{ tabBarBadge: 3 }}
-        />
+        <Tab.Screen name="Parts" component={PartsStackScreen} />
         <Tab.Screen name="Sets" component={SetsStackScreen} />
         <Tab.Screen name="Minifigs" component={MinifigsStackScreen} />
       </Tab.Navigator>

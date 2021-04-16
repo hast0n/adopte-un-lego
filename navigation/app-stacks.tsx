@@ -40,6 +40,17 @@ export const PartsStackScreen = () => {
   );
 };
 
+// Define view stack inside Minifigs tab
+const MinifigsStack = createStackNavigator<RootStackParamList>();
+export const MinifigsStackScreen = () => {
+  return (
+    <PartsStack.Navigator>
+      <PartsStack.Screen name="Parts" component={PartsScreen} />
+      <PartsStack.Screen name="Minifigs" component={MinifigsScreen} />
+    </PartsStack.Navigator>
+  );
+};
+
 export interface SetsScreenProps {
   navigation: StackNavigationProp<RootStackParamList, "Sets">;
 }
