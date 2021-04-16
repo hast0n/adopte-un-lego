@@ -43,27 +43,27 @@ interface IPart {
 class LegoDbApi {
   // ---- SETS ----
   // .recup un set en fonction de l'id du set
-  searchLegoSetById(id: number): Promise<Array<LegoSet>> {
-    return this.fetchSetsFromApi(
-      `${rootEndpoint}sets/${id}/?key=${key}`
-    ).then((sets) => this.createLegoSets(sets));
+  searchLegoSetById(id: string): Promise<LegoSet> {
+    return this.fetchSetFromApi(
+      `${rootEndpoint}/sets/${id}/?key=${key}`
+    ).then((set) => this.createLegoSet(set));
   }
   // .recup des sets en fonction de l'id du theme
   searchLegoSetByThemeId(id: number): Promise<Array<LegoSet>> {
     return this.fetchSetsFromApi(
-      `${rootEndpoint}sets/?key=${key}&theme_id=${id}`
+      `${rootEndpoint}/sets/?key=${key}&theme_id=${id}`
     ).then((sets) => this.createLegoSets(sets));
   }
   // .recup des sets en fonction d'un ou plusieurs mot
   searchLegoSetByTerm(term: string): Promise<Array<LegoSet>> {
     return this.fetchSetsFromApi(
-      `${rootEndpoint}sets/?key=${key}&search=${term}`
+      `${rootEndpoint}/sets/?key=${key}&search=${term}`
     ).then((sets) => this.createLegoSets(sets));
   }
   // .recup des sets alternatifs (à un set particulier) en fonction de l'id du set en question
-  searchAlternateBuildsById(sourceSetId: number): Promise<Array<LegoSet>> {
+  searchAlternateBuildsById(sourceSetId: string): Promise<Array<LegoSet>> {
     return this.fetchSetsFromApi(
-      `${rootEndpoint}sets/${sourceSetId}/alternates/?key=${key}`
+      `${rootEndpoint}/sets/${sourceSetId}/alternates/?key=${key}`
     ).then((sets) => this.createLegoSets(sets));
   }
 
@@ -71,14 +71,14 @@ class LegoDbApi {
   // .recup des minifigs en fonction d'un ou plusieurs mot
   searchMinifigByTerm(term: string): Promise<Array<Minifig>> {
     return this.fetchFigsFromApi(
-      `${rootEndpoint}minifigs/?key=${key}&search=${term}`
+      `${rootEndpoint}/minifigs/?key=${key}&search=${term}`
     ).then((figs) => this.createMinifigs(figs));
   }
-  // .recup un minifig en fonction de l'id du set
-  searchMinifigById(id: number): Promise<Array<Minifig>> {
-    return this.fetchFigsFromApi(
-      `${rootEndpoint}minifigs/${id}/?key=${key}`
-    ).then((figs) => this.createMinifigs(figs));
+  // .recup 1 minifig en fonction de l'id du set
+  getMinifigById(id: string): Promise<Minifig> {
+    return this.fetchFigFromApi(
+      `${rootEndpoint}/minifigs/${id}/?key=${key}`
+    ).then((fig) => this.createMinifig(fig));
   }
 
   // ---- MISC ----
@@ -86,36 +86,50 @@ class LegoDbApi {
     return `https://rebrickable.com/static/img/themes/${id}-tile.png`;
   }
 
-  fetchSetsFromApi(query: string): Promise<Array<ISet>> {
-    return (
-      fetch(query)
-        // FIXME: JSON parse error when ingredient is not found
-        .then((response) => response.json())
-        .then((jsonResponse) => jsonResponse || [])
-        .catch((error) => [])
-    );
+  // ---- FETCH ----
+  private fetchSetsFromApi(query: string): Promise<Array<ISet>> {
+    return fetch(query)
+      .then((response) => response.json())
+      .then((jsonResponse) => jsonResponse || [])
+      .catch((error) => []);
+  }
+
+  private fetchSetFromApi(query: string): Promise<ISet> {
+    return fetch(query)
+      .then((response) => response.json())
+      .then((jsonResponse) => jsonResponse || [])
+      .catch((error) => []);
   }
 
   private fetchPartsFromApi(query: string): Promise<Array<IPart>> {
-    return (
-      fetch(query)
-        // FIXME: JSON parse error when ingredient is not found
-        .then((response) => response.json())
-        .then((jsonResponse) => jsonResponse || [])
-        .catch((error) => [])
-    );
+    return fetch(query)
+      .then((response) => response.json())
+      .then((jsonResponse) => jsonResponse || [])
+      .catch((error) => []);
+  }
+
+  private fetchPartFromApi(query: string): Promise<IPart> {
+    return fetch(query)
+      .then((response) => response.json())
+      .then((jsonResponse) => jsonResponse || [])
+      .catch((error) => []);
   }
 
   private fetchFigsFromApi(query: string): Promise<Array<IFig>> {
-    return (
-      fetch(query)
-        // FIXME: JSON parse error when ingredient is not found
-        .then((response) => response.json())
-        .then((jsonResponse) => jsonResponse || [])
-        .catch((error) => [])
-    );
+    return fetch(query)
+      .then((response) => response.json())
+      .then((jsonResponse) => jsonResponse || [])
+      .catch((error) => []);
   }
 
+  private fetchFigFromApi(query: string): Promise<IFig> {
+    return fetch(query)
+      .then((response) => response.json())
+      .then((jsonResponse) => jsonResponse || [])
+      .catch((error) => []);
+  }
+
+  // ---- Feed data types ----
   private createLegoSets(sets: Array<ISet>): Array<LegoSet> {
     return sets.map((set) => this.createLegoSet(set));
   }
