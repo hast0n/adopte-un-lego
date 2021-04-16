@@ -40,6 +40,10 @@ class LegoDbApi {
     ).then((sets) => this.createLegoSets(sets));
   }
 
+  getThemePictureUrlById(id: number): string {
+    return `https://rebrickable.com/static/img/themes/${id}-tile.png`
+  }
+
   private fetchFromApi(query: string): Promise<Array<Set>> {
     return (
       fetch(query)
