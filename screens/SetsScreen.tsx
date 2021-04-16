@@ -1,32 +1,43 @@
 import React, { Component } from "react";
-import { Text, View, Button } from "react-native";
-import Input from "../navigation/components/input";
+import { StyleSheet, Text, View, Button } from "react-native";
 import { SetsScreenProps } from "../navigation/app-stacks";
-import setsdbapiService from "./services/cocktaildbapi.service";
+import legodbapi from "../services/legodbapi.service";
 import { FlatList } from "react-native-gesture-handler";
-import Sets from "../screens/services/cocktail.model";
-import SetsList from "../navigation/components/CocktailList";
-import SetsItem from "../navigation/components/CocktailItem";
+import RechercheInput from "../components/RechercheInput";
+import Set from "../services/legoset.model";
 
 interface SetsScreenState {
-  SetsList: Array<Sets>;
+  SetList: Array<Set>;
 }
 
-export default class SetsScreen extends Component<SetsScreenProps> {
-  // state: SetsScreenState = {
-  //   SetsList: [],
-  // };
+export default class SetsScreen extends Component<{}, SetsScreenState> {
+  state: SetsScreenState = {
+    SetList: [],
+  };
   // onTextSubmitLocale = (text: string) => {
   //   setsdbapiService.searchSetsByName(text).then((result) => {
   //     this.setState({ SetsList: result });
   //   });
   // };
-  renderItemLocale = ({ item }: { item: Sets }) => {
-    //return <SetsItem sets={item} navigation={this.props.navigation} />;
-  };
+  // renderItemLocale = ({ item }: { item: Sets }) => {
+  //   //return <SetsItem sets={item} navigation={this.props.navigation} />;
+  // };
   render() {
     return (
-      
+      <View style={styles.container}>
+        <RechercheInput />
+        <Text>Setssssssss</Text>
+      </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    paddingTop: 40,
+  },
+});
