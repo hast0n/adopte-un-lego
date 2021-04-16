@@ -5,7 +5,7 @@ import Minifig from "./legominifig.model";
 const key = "804ce1e3431c0498af9ca6e60bb6e27d";
 const rootEndpoint = `https://rebrickable.com/api/v3/lego`;
 
-export interface Set {
+interface ISet {
   set_num: string;
   name: string;
   year: number;
@@ -16,7 +16,7 @@ export interface Set {
   last_modified_dt: string;
 }
 
-export interface Fig {
+interface IFig {
   set_num: string;
   name: string;
   num_parts: number;
@@ -25,7 +25,7 @@ export interface Fig {
   last_modified_dt: string;
 }
 
-export interface Part {
+interface IPart {
   part_num: string;
   name: string;
   part_cat_id: number;
@@ -44,39 +44,39 @@ class LegoDbApi {
   // ---- SETS ----
   // .recup un set en fonction de l'id du set
   searchLegoSetById(id: number): Promise<Array<LegoSet>> {
-    return this.fetchFromApi(
+    return this.fetchSetsFromApi(
       `${rootEndpoint}sets/${id}/?key=${key}`
     ).then((sets) => this.createLegoSets(sets));
   }
   // .recup des sets en fonction de l'id du theme
   searchLegoSetByThemeId(id: number): Promise<Array<LegoSet>> {
-    return this.fetchFromApi(
+    return this.fetchSetsFromApi(
       `${rootEndpoint}sets/?key=${key}&theme_id=${id}`
     ).then((sets) => this.createLegoSets(sets));
   }
   // .recup des sets en fonction d'un ou plusieurs mot
   searchLegoSetByTerm(term: string): Promise<Array<LegoSet>> {
-    return this.fetchFromApi(
+    return this.fetchSetsFromApi(
       `${rootEndpoint}sets/?key=${key}&search=${term}`
     ).then((sets) => this.createLegoSets(sets));
   }
   // .recup des sets alternatifs (à un set particulier) en fonction de l'id du set en question
   searchAlternateBuildsById(sourceSetId: number): Promise<Array<LegoSet>> {
-    return this.fetchFromApi(
+    return this.fetchSetsFromApi(
       `${rootEndpoint}sets/${sourceSetId}/alternates/?key=${key}`
     ).then((sets) => this.createLegoSets(sets));
   }
 
   // ---- MINIFIGS ----
-  // .recup des sets en fonction d'un ou plusieurs mot
-  searchMiniFigByTerm(term: string): Promise<Array<Minifig>> {
-    return this.fetchFromApi(
+  // .recup des minifigs en fonction d'un ou plusieurs mot
+  searchMinifigByTerm(term: string): Promise<Array<Minifig>> {
+    return this.fetchFigsFromApi(
       `${rootEndpoint}minifigs/?key=${key}&search=${term}`
     ).then((figs) => this.createMinifigs(figs));
   }
   // .recup un minifig en fonction de l'id du set
   searchMinifigById(id: number): Promise<Array<Minifig>> {
-    return this.fetchFromApi(
+    return this.fetchFigsFromApi(
       `${rootEndpoint}minifigs/${id}/?key=${key}`
     ).then((figs) => this.createMinifigs(figs));
   }
@@ -86,21 +86,41 @@ class LegoDbApi {
     return `https://rebrickable.com/static/img/themes/${id}-tile.png`;
   }
 
-  private fetchFromApi(query: string): Promise<Array<Set>> {
+  fetchSetsFromApi(query: string): Promise<Array<ISet>> {
     return (
       fetch(query)
         // FIXME: JSON parse error when ingredient is not found
         .then((response) => response.json())
-        .then((jsonResponse) => jsonResponse.drinks || [])
+        .then((jsonResponse) => jsonResponse || [])
         .catch((error) => [])
     );
   }
 
-  private createLegoSets(sets: Array<Set>): Array<LegoSet> {
+  private fetchPartsFromApi(query: string): Promise<Array<IPart>> {
+    return (
+      fetch(query)
+        // FIXME: JSON parse error when ingredient is not found
+        .then((response) => response.json())
+        .then((jsonResponse) => jsonResponse || [])
+        .catch((error) => [])
+    );
+  }
+
+  private fetchFigsFromApi(query: string): Promise<Array<IFig>> {
+    return (
+      fetch(query)
+        // FIXME: JSON parse error when ingredient is not found
+        .then((response) => response.json())
+        .then((jsonResponse) => jsonResponse || [])
+        .catch((error) => [])
+    );
+  }
+
+  private createLegoSets(sets: Array<ISet>): Array<LegoSet> {
     return sets.map((set) => this.createLegoSet(set));
   }
 
-  private createLegoSet(set: Set): LegoSet {
+  private createLegoSet(set: ISet): LegoSet {
     return new LegoSet(
       set.set_num,
       set.name,
@@ -113,11 +133,11 @@ class LegoDbApi {
     );
   }
 
-  private createMinifigs(figs: Array<Fig>): Array<Minifig> {
+  private createMinifigs(figs: Array<IFig>): Array<Minifig> {
     return figs.map((fig) => this.createMinifig(fig));
   }
 
-  private createMinifig(fig: Fig): Minifig {
+  private createMinifig(fig: IFig): Minifig {
     return new Minifig(
       fig.set_num,
       fig.name,
@@ -128,11 +148,11 @@ class LegoDbApi {
     );
   }
 
-  private createLegoParts(parts: Array<Part>): Array<LegoPart> {
+  private createLegoParts(parts: Array<IPart>): Array<LegoPart> {
     return parts.map((part) => this.createLegoPart(part));
   }
 
-  private createLegoPart(part: Part): LegoPart {
+  private createLegoPart(part: IPart): LegoPart {
     return new LegoPart(
       part.part_num,
       part.name,

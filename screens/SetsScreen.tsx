@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
+import { StyleSheet, Text, View, Button, FlatList } from "react-native";
 import { SetsScreenProps } from "../navigation/app-stacks";
 import legodbapi from "../services/legodbapi.service";
-import { FlatList } from "react-native-gesture-handler";
+//import { FlatList } from "react-native-gesture-handler";
 import RechercheInput from "../components/RechercheInput";
 import Set from "../services/legoset.model";
 
