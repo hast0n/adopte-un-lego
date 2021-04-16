@@ -10,3 +10,5 @@ export default class LegoSet {
     public LastModified: string
   ) {}
 }
+
+//test comment
