@@ -7,7 +7,7 @@ export default class RechercheInput extends Component {
     return (
       <View style={styles.container}>
         <Ionicons name="search" size={30} color="black" />
-        <TextInput />
+        <TextInput style={styles.textInput} placeholder="Rechercher" />
       </View>
     );
   }
@@ -20,9 +20,15 @@ const styles = StyleSheet.create({
     backgroundColor: "lightgrey",
     height: 50,
     width: 280,
-    fontSize: 20,
     borderRadius: 25,
-    paddingLeft: 20,
-    paddingRight: 20,
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  textInput: {
+    flex: 1,
+    height: 50,
+    fontSize: 15,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
 });
