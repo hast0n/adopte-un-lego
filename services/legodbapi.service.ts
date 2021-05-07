@@ -54,7 +54,7 @@ class LegoDbApi {
       `${rootEndpoint}/sets/?key=${key}&theme_id=${id}`
     ).then((sets) => this.createLegoSets(sets));
   }
-  // .recup des sets en fonction d'un ou plusieurs mot
+  // .recup des sets en fonction d'un ou plusieurs mots
   searchLegoSetByTerm(term: string): Promise<Array<LegoSet>> {
     return this.fetchSetsFromApi(
       `${rootEndpoint}/sets/?key=${key}&search=${term}`

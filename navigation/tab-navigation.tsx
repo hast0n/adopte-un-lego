@@ -21,13 +21,11 @@ export const TabNavigator = () => {
             let iconName: any; // TODO: find better type
 
             if (route.name === "Sets") {
-              iconName = focused
-                ? "ios-information-circle"
-                : "ios-information-circle-outline";
+              iconName = focused ? "ios-cube" : "ios-cube-outline";
             } else if (route.name === "Parts") {
-              iconName = focused ? "ios-list-sharp" : "ios-list-outline";
+              iconName = focused ? "ios-apps" : "ios-apps-outline";
             } else if (route.name === "Minifigs") {
-              iconName = focused ? "ios-list-sharp" : "ios-list-outline";
+              iconName = focused ? "ios-man" : "ios-man-outline";
             }
 
             // You can return any component that you like here!
@@ -39,9 +37,21 @@ export const TabNavigator = () => {
           inactiveTintColor: "gray",
         }}
       >
-        <Tab.Screen name="Parts" component={PartsStackScreen} />
-        <Tab.Screen name="Sets" component={SetsStackScreen} />
-        <Tab.Screen name="Minifigs" component={MinifigsStackScreen} />
+        <Tab.Screen
+          name="Sets"
+          component={SetsStackScreen}
+          options={{ title: "Lego Sets" }}
+        />
+        <Tab.Screen
+          name="Minifigs"
+          component={MinifigsStackScreen}
+          options={{ title: "Minifigs" }}
+        />
+        <Tab.Screen
+          name="Parts"
+          component={PartsStackScreen}
+          options={{ title: "Lego Parts" }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );
