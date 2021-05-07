@@ -1,6 +1,7 @@
 import LegoSet from "./legoset.model";
 import LegoPart from "./legopart.model";
 import Minifig from "./legominifig.model";
+import LegoTheme from "./legotheme.model";
 
 const key = "804ce1e3431c0498af9ca6e60bb6e27d";
 const rootEndpoint = `https://rebrickable.com/api/v3/lego`;
@@ -38,6 +39,12 @@ interface IPart {
   alternates: any;
   external_ids: any;
   print_of: string;
+}
+
+interface ITheme {
+  id: number;
+  parent_id: number;
+  name: string;
 }
 
 class LegoDbApi {
@@ -82,6 +89,14 @@ class LegoDbApi {
   }
 
   // ---- MISC ----
+  getThemes(): Promise<Array<LegoTheme>> {
+    return fetch(`${rootEndpoint}/themes/?key=${key}`)
+      .then((response) => response.json())
+      .then((jsonResponse) => jsonResponse || [])
+      .catch((error) => [])
+      .then((themes) => this.createThemes(themes));
+  }
+
   getThemePictureUrlById(id: number): string {
     return `https://rebrickable.com/static/img/themes/${id}-tile.png`;
   }
@@ -129,7 +144,7 @@ class LegoDbApi {
       .catch((error) => []);
   }
 
-  // ---- Feed data types ----
+  // ---- Format data types ----
   private createLegoSets(sets: Array<ISet>): Array<LegoSet> {
     return sets.map((set) => this.createLegoSet(set));
   }
@@ -176,6 +191,16 @@ class LegoDbApi {
       part.part_url,
       part.part_img_url
     );
+  }
+
+  private createThemes(themes: Array<ITheme>): Array<LegoTheme> {
+    console.log(themes);
+    return themes.map((theme) => this.createTheme(theme));
+  }
+
+  private createTheme(theme: ITheme): LegoTheme {
+    console.log(theme);
+    return new LegoTheme(theme.id, theme.name, theme.parent_id);
   }
 }
 

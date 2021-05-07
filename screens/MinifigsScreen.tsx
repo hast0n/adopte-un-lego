@@ -7,10 +7,6 @@ export default class MinifigsScreen extends Component<MinifigsScreenProps, {}> {
   render() {
     //const navigation: StackNavigationProp<RootStackParamList, "Cocktail">
     //const{navigation} = this.props;
-    return (
-      <View>
-        <Text>Minifigssssss</Text>
-      </View>
-    );
+    return <View></View>;
   }
 }
