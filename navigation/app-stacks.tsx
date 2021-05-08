@@ -51,16 +51,16 @@ export const PartsStackScreen = () => {
 const MinifigsStack = createStackNavigator<RootStackParamList>();
 export const MinifigsStackScreen = () => {
   return (
-    <PartsStack.Navigator
+    <MinifigsStack.Navigator
       screenOptions={{
         headerTintColor: "tomato",
         headerStyle: { backgroundColor: "white" },
         title: "Lego Minifigs",
       }}
     >
-      <PartsStack.Screen name="Parts" component={PartsScreen} />
-      <PartsStack.Screen name="Minifigs" component={MinifigsScreen} />
-    </PartsStack.Navigator>
+      <MinifigsStack.Screen name="Parts" component={PartsScreen} />
+      <MinifigsStack.Screen name="Minifigs" component={MinifigsScreen} />
+    </MinifigsStack.Navigator>
   );
 };
 

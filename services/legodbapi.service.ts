@@ -3,7 +3,7 @@ import LegoPart from "./legopart.model";
 import Minifig from "./legominifig.model";
 import LegoTheme from "./legotheme.model";
 
-const key = "804ce1e3431c0498af9ca6e60bb6e27d";
+const key = "fd9dac4a20bbe4cd0b747c92c2532917";
 const rootEndpoint = `https://rebrickable.com/api/v3/lego`;
 
 interface ISet {
@@ -12,7 +12,7 @@ interface ISet {
   year: number;
   theme_id: number;
   num_parts: number;
-  img_url: string;
+  set_img_url: string;
   set_url: string;
   last_modified_dt: string;
 }
@@ -50,7 +50,7 @@ interface ITheme {
 class LegoDbApi {
   // ---- SETS ----
   // .recup un set en fonction de l'id du set
-  searchLegoSetById(id: string): Promise<LegoSet> {
+  getLegoSetById(id: string): Promise<LegoSet> {
     return this.fetchSetFromApi(
       `${rootEndpoint}/sets/${id}/?key=${key}`
     ).then((set) => this.createLegoSet(set));
@@ -68,7 +68,7 @@ class LegoDbApi {
     ).then((sets) => this.createLegoSets(sets));
   }
   // .recup des sets alternatifs (à un set particulier) en fonction de l'id du set en question
-  searchAlternateBuildsById(sourceSetId: string): Promise<Array<LegoSet>> {
+  getAlternateBuildsById(sourceSetId: string): Promise<Array<LegoSet>> {
     return this.fetchSetsFromApi(
       `${rootEndpoint}/sets/${sourceSetId}/alternates/?key=${key}`
     ).then((sets) => this.createLegoSets(sets));
@@ -89,23 +89,37 @@ class LegoDbApi {
   }
 
   // ---- MISC ----
-  getThemes(): Promise<Array<LegoTheme>> {
-    return fetch(`${rootEndpoint}/themes/?key=${key}`)
+  getAllThemes(): Promise<Array<LegoTheme>> {
+    let p = fetch(`${rootEndpoint}/themes/?key=${key}&page_size=599`)
+      .then((response) => response.json())
+      .then((jsonResponse) => jsonResponse["results"] || [])
+      .catch((error) => []);
+
+    return p.then((results) => this.createThemes(results));
+  }
+
+  getThemeByID(id: number): Promise<LegoTheme> {
+    let p = fetch(`${rootEndpoint}/themes/${id}/?key=${key}`)
       .then((response) => response.json())
       .then((jsonResponse) => jsonResponse || [])
-      .catch((error) => [])
-      .then((themes) => this.createThemes(themes));
+      .catch((error) => []);
+
+    return p.then((response) => this.createTheme(response));
   }
 
   getThemePictureUrlById(id: number): string {
     return `https://rebrickable.com/static/img/themes/${id}-tile.png`;
   }
 
+  getThemeLogoUrlById(id: number): string {
+    return `https://rebrickable.com/static/img/themes/${id}-logo.png`;
+  }
+
   // ---- FETCH ----
   private fetchSetsFromApi(query: string): Promise<Array<ISet>> {
     return fetch(query)
       .then((response) => response.json())
-      .then((jsonResponse) => jsonResponse || [])
+      .then((jsonResponse) => jsonResponse["results"] || [])
       .catch((error) => []);
   }
 
@@ -119,7 +133,7 @@ class LegoDbApi {
   private fetchPartsFromApi(query: string): Promise<Array<IPart>> {
     return fetch(query)
       .then((response) => response.json())
-      .then((jsonResponse) => jsonResponse || [])
+      .then((jsonResponse) => jsonResponse["results"] || [])
       .catch((error) => []);
   }
 
@@ -133,7 +147,7 @@ class LegoDbApi {
   private fetchFigsFromApi(query: string): Promise<Array<IFig>> {
     return fetch(query)
       .then((response) => response.json())
-      .then((jsonResponse) => jsonResponse || [])
+      .then((jsonResponse) => jsonResponse["results"] || [])
       .catch((error) => []);
   }
 
@@ -156,7 +170,7 @@ class LegoDbApi {
       set.year,
       set.theme_id,
       set.num_parts,
-      set.img_url,
+      set.set_img_url,
       set.set_url,
       set.last_modified_dt
     );
@@ -194,12 +208,10 @@ class LegoDbApi {
   }
 
   private createThemes(themes: Array<ITheme>): Array<LegoTheme> {
-    console.log(themes);
     return themes.map((theme) => this.createTheme(theme));
   }
 
   private createTheme(theme: ITheme): LegoTheme {
-    console.log(theme);
     return new LegoTheme(theme.id, theme.name, theme.parent_id);
   }
 }

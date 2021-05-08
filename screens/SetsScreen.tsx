@@ -6,10 +6,13 @@ import legodbapi from "../services/legodbapi.service";
 import Input from "../components/Input";
 import Set from "../services/legoset.model";
 import LegoTheme from "../services/legotheme.model";
+import { ScrollView } from "react-native-gesture-handler";
+import LegoSet from "../services/legoset.model";
 
 interface SetsScreenState {
   setList: Array<Set>;
   themeList: Array<LegoTheme>; // not supposed to be updated but might be more efficient to store it there ¯\_(ツ)_/¯
+  currentSearch: string;
 }
 
 export default class SetsScreen extends Component<
@@ -17,85 +20,183 @@ export default class SetsScreen extends Component<
   SetsScreenState
 > {
   state: SetsScreenState = {
-    setList: [],
+    setList: [
+      // new LegoSet(
+      //   "",
+      //   "Batgirl",
+      //   2005,
+      //   1,
+      //   3,
+      //   "https://cdn.rebrickable.com/media/thumbs/sets/41618-1/15893.jpg/180x180p.jpg",
+      //   "",
+      //   ""
+      // ),
+    ],
     themeList: [],
+    currentSearch: "",
   };
 
-  legoThemes: Array<LegoTheme> = [];
+  allowedThemes: number[] = [
+    602,
+    576,
+    693,
+    435,
+    577,
+    155,
+    676,
+    494,
+    246,
+    252,
+    610,
+    621,
+    535,
+    22,
+    608,
+    579,
+    504,
+    601,
+    158,
+    695,
+    50,
+    1,
+    690,
+    696,
+  ];
 
   getThemes = () => {
-    legodbapi.getThemes().then((themes) => {
-      this.setState({ themeList: themes });
-    });
+    return legodbapi.getAllThemes();
   };
 
   componentDidMount() {
-    this.getThemes();
+    // Get themes from API:
+
+    // Method 1: Generates a lot of requests which might block the access for a certain amount of time...
+    // this.allowedThemes.forEach((id) => {
+    //   legodbapi.getThemeByID(id).then((theme) => {
+    //     this.setState({ themeList: [theme, ...this.state.themeList] });
+    //   });
+    // });
+
+    // Method 2: Is really not effective as we retrive the entire theme database and then filter it...
+    legodbapi.getAllThemes().then((themes) => {
+      this.setState({
+        themeList: themes.filter((theme) =>
+          this.allowedThemes.includes(theme.ID)
+        ),
+      });
+    });
   }
 
   onSearchSubmit = (text: string) => {
     legodbapi.searchLegoSetByTerm(text).then((result) => {
-      this.setState({ setList: result });
+      this.setState({ setList: result, currentSearch: text });
     });
   };
 
   themeRenderItem = ({ item }: { item: LegoTheme }) => {
-    //Search by theme page
-    //return <SetsItem sets={item} navigation={this.props.navigation} />;
-
     return (
-      <View style={styles.themeItem}>
+      <View style={themeStyles.item}>
         <Image
-          style={styles.themePicture}
+          style={themeStyles.picture}
           source={{ uri: legodbapi.getThemePictureUrlById(item.ID) }}
+        ></Image>
+        <Image
+          style={themeStyles.logo}
+          source={{ uri: legodbapi.getThemeLogoUrlById(item.ID) }}
+          resizeMethod={"scale"}
+          resizeMode={"contain"}
         ></Image>
       </View>
     );
   };
 
+  bringBackThemes = () => {
+    this.setState({ setList: [] });
+  };
+
+  setRenderItem = ({ item }: { item: LegoSet }) => {
+    return (
+      <View style={setStyles.item}>
+        <Image
+          style={setStyles.picture}
+          source={{ uri: item.ImgUrl }}
+          resizeMethod={"scale"}
+          resizeMode={"contain"}
+        ></Image>
+        <Text style={setStyles.name}>{item.Name}</Text>
+        <View style={setStyles.info}>
+          <View>
+            <Text style={setStyles.year}>{item.Year}</Text>
+            <Text style={setStyles.id}>{item.ID}</Text>
+          </View>
+          <Text style={setStyles.nbParts}>{item.NumParts}</Text>
+        </View>
+      </View>
+    );
+  };
+
+  header = (
+    <View style={screenStyles.header}>
+      <Text style={screenStyles.hint}>
+        Search a Lego set by name or browse the collection by theme
+      </Text>
+
+      <Input
+        onSubmitEditing={this.onSearchSubmit}
+        placeholder="Search a Lego set"
+        clearAfterSubmit={false}
+        showDismissButton={true}
+        onDismissPress={this.bringBackThemes}
+      />
+
+      <Divider style={screenStyles.divider} />
+    </View>
+  );
+
   render() {
     if (this.state.setList.length < 1) {
       return (
-        <View style={styles.container}>
-          <Text style={styles.hint}>
-            Search a Lego set by name or browse the collection by theme
-          </Text>
+        <View style={screenStyles.container}>
+          {this.header}
 
-          <Divider style={styles.divider} />
-
-          <Input
-            onSubmitEditing={this.onSearchSubmit}
-            placeholder="Search a Lego set"
-          />
+          <Text style={screenStyles.title}>Themes</Text>
 
           <FlatList
-            style={styles.themeList}
+            columnWrapperStyle={themeStyles.columnWrapper}
+            numColumns={3}
+            key={3}
+            data={this.state.themeList}
+            style={themeStyles.list}
             renderItem={this.themeRenderItem}
-            data={this.legoThemes}
+            keyExtractor={(item) => item.ID.toString()}
+          />
+        </View>
+      );
+    } else {
+      return (
+        <View style={screenStyles.container}>
+          {this.header}
+
+          <Text style={screenStyles.title}>
+            Search results for "{this.state.currentSearch}"
+          </Text>
+
+          <FlatList
+            columnWrapperStyle={setStyles.columnWrapper}
+            numColumns={2}
+            key={2}
+            data={this.state.setList}
+            style={setStyles.list}
+            renderItem={this.setRenderItem}
+            keyExtractor={(item) => item.ID.toString()}
           />
         </View>
       );
     }
-    return (
-      <View style={styles.container}>
-        <Text style={styles.hint}>
-          Search a Lego set by name or browse the collection by theme
-        </Text>
-
-        <Divider style={styles.divider} />
-
-        <Input
-          onSubmitEditing={this.onSearchSubmit}
-          placeholder="Search a Lego set"
-        />
-
-        <Text>Results for "{}"</Text>
-      </View>
-    );
   }
 }
 
-const styles = StyleSheet.create({
+const screenStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
@@ -105,6 +206,7 @@ const styles = StyleSheet.create({
   },
   hint: {
     marginHorizontal: 10,
+    marginBottom: 10,
     textAlign: "center",
     fontSize: 18,
     color: "gray",
@@ -112,13 +214,100 @@ const styles = StyleSheet.create({
   divider: {
     marginVertical: 20,
     backgroundColor: "gray",
-    height: 0.2,
+    height: 0.3,
     width: 370,
   },
-  themeList: {},
-  themeItem: {},
-  themePicture: {
-    height: 10,
-    width: 10,
+  header: {
+    alignItems: "center",
   },
+  title: {
+    alignSelf: "flex-start",
+    color: "tomato",
+    fontSize: 16,
+    marginHorizontal: 22,
+    marginBottom: 10,
+  },
+});
+
+const themeStyles = StyleSheet.create({
+  list: {
+    flex: 1,
+    alignSelf: "stretch",
+  },
+  columnWrapper: {
+    justifyContent: "space-between",
+    marginHorizontal: 21,
+    marginVertical: 10,
+  },
+  item: {
+    overflow: "hidden",
+    width: 115,
+    height: 130,
+    borderRadius: 5,
+    backgroundColor: "white",
+    shadowColor: "black",
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    elevation: 5,
+  },
+  logo: {
+    flex: 1,
+    width: "90%",
+    height: undefined,
+    alignSelf: "center",
+    marginBottom: 3,
+  },
+  picture: {
+    height: 100,
+    width: 100,
+    alignSelf: "center",
+  },
+  divider: {
+    backgroundColor: "gray",
+    height: 0.3,
+    width: 30,
+    alignSelf: "center",
+  },
+});
+
+const setStyles = StyleSheet.create({
+  list: {
+    flex: 1,
+    alignSelf: "stretch",
+  },
+  columnWrapper: {
+    justifyContent: "space-between",
+    marginHorizontal: 21,
+    marginVertical: 10,
+  },
+  item: {
+    overflow: "hidden",
+    flex: 0.47,
+    height: 200,
+    borderRadius: 5,
+    backgroundColor: "white",
+    shadowColor: "black",
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    elevation: 5,
+  },
+  picture: {
+    flex: 1,
+    height: undefined,
+    width: "100%",
+    alignSelf: "center",
+  },
+  name: {
+    fontWeight: "bold",
+    marginHorizontal: 10,
+    marginVertical: 4,
+  },
+  id: {},
+  nbParts: {},
+  year: {},
+  info: {},
 });

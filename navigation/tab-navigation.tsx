@@ -35,6 +35,8 @@ export const TabNavigator = () => {
         tabBarOptions={{
           activeTintColor: "tomato",
           inactiveTintColor: "gray",
+          style: { height: 65 },
+          labelStyle: { marginBottom: 10 },
         }}
       >
         <Tab.Screen
