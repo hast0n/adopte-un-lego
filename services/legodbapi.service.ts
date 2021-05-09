@@ -88,7 +88,14 @@ class LegoDbApi {
     ).then((fig) => this.createMinifig(fig));
   }
 
-  // ---- MISC ----
+  // ---- PARTS ----
+  getPartsBySetID(id: string): Promise<Array<LegoPart>> {
+    return this.fetchPartsFromApi(
+      `${rootEndpoint}/sets/${id}/parts/?key=${key}`
+    ).then((parts) => this.createLegoParts(parts));
+  }
+
+  // ---- THEME ----
   getAllThemes(): Promise<Array<LegoTheme>> {
     let p = fetch(`${rootEndpoint}/themes/?key=${key}&page_size=599`)
       .then((response) => response.json())
@@ -133,7 +140,9 @@ class LegoDbApi {
   private fetchPartsFromApi(query: string): Promise<Array<IPart>> {
     return fetch(query)
       .then((response) => response.json())
-      .then((jsonResponse) => jsonResponse["results"] || [])
+      .then(
+        (jsonResponse) => jsonResponse["results"].map((i) => i["part"]) || []
+      )
       .catch((error) => []);
   }
 
@@ -192,6 +201,7 @@ class LegoDbApi {
   }
 
   private createLegoParts(parts: Array<IPart>): Array<LegoPart> {
+    console.log(parts[0]);
     return parts.map((part) => this.createLegoPart(part));
   }
 
