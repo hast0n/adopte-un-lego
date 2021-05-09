@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import SetsScreen from "../screens/SetsScreen";
 import PartsScreen from "../screens/SetsScreen";
 import MinifigsScreen from "../screens/MinifigsScreen";
+import SetDetailScreen from "../screens/SetDetailScreen";
 
 // Define view names and associated params
 // undefined = no params passed to view
@@ -11,6 +12,8 @@ export type RootStackParamList = {
   Sets: undefined;
   Parts: undefined;
   Minifigs: undefined;
+  SetDetails: { id: string };
+  ThemeSearch: { id: string };
 };
 
 // Define view stack inside Sets tab
@@ -25,10 +28,26 @@ export const SetsStackScreen = () => {
       }}
     >
       <SetsStack.Screen name="Sets" component={SetsScreen} />
-      <SetsStack.Screen name="Parts" component={PartsScreen} />
+      <SetsStack.Screen name="SetDetails" component={SetDetailScreen} />
     </SetsStack.Navigator>
   );
 };
+
+// // Define view stack inside Sets tab
+// const SetDetailStack = createStackNavigator<RootStackParamList>();
+// export const SetDetailStackScreen = () => {
+//   return (
+//     <SetDetailStack.Navigator
+//       screenOptions={{
+//         headerTintColor: "tomato",
+//         headerStyle: { backgroundColor: "white" },
+//       }}
+//     >
+//       <SetsStack.Screen name="Sets" component={SetsScreen} />
+//       <SetsStack.Screen name="SetDetails" component={SetDetailScreen} />
+//     </SetDetailStack.Navigator>
+//   );
+// };
 
 // Define view stack inside Parts tab
 const PartsStack = createStackNavigator<RootStackParamList>();
@@ -74,4 +93,12 @@ export interface MinifigsScreenProps {
 
 export interface PartsScreenProps {
   navigation: StackNavigationProp<RootStackParamList, "Parts">;
+}
+
+export interface SetDetailScreenProps {
+  navigation: StackNavigationProp<RootStackParamList, "SetDetails">;
+}
+
+export interface ThemeSearchScreenProps {
+  navigation: StackNavigationProp<RootStackParamList, "ThemeSearch">;
 }

@@ -55,8 +55,7 @@ export default class Input extends React.Component<InputProps, InputState> {
       this.setState({ dismissVisible: true });
     }
 
-    if (this.state.dismissVisible && text == "")
-      this.setState({ dismissVisible: false });
+    if (this.state.dismissVisible && text == "") this.onPress();
   };
 
   render() {

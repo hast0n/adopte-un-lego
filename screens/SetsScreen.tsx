@@ -6,7 +6,7 @@ import legodbapi from "../services/legodbapi.service";
 import Input from "../components/Input";
 import Set from "../services/legoset.model";
 import LegoTheme from "../services/legotheme.model";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import LegoSet from "../services/legoset.model";
 
 interface SetsScreenState {
@@ -20,18 +20,7 @@ export default class SetsScreen extends Component<
   SetsScreenState
 > {
   state: SetsScreenState = {
-    setList: [
-      // new LegoSet(
-      //   "",
-      //   "Batgirl",
-      //   2005,
-      //   1,
-      //   3,
-      //   "https://cdn.rebrickable.com/media/thumbs/sets/41618-1/15893.jpg/180x180p.jpg",
-      //   "",
-      //   ""
-      // ),
-    ],
+    setList: [],
     themeList: [],
     currentSearch: "",
   };
@@ -96,16 +85,46 @@ export default class SetsScreen extends Component<
   themeRenderItem = ({ item }: { item: LegoTheme }) => {
     return (
       <View style={themeStyles.item}>
-        <Image
-          style={themeStyles.picture}
-          source={{ uri: legodbapi.getThemePictureUrlById(item.ID) }}
-        ></Image>
-        <Image
-          style={themeStyles.logo}
-          source={{ uri: legodbapi.getThemeLogoUrlById(item.ID) }}
-          resizeMethod={"scale"}
-          resizeMode={"contain"}
-        ></Image>
+        <TouchableOpacity style={{ height: "100%", width: "100%" }}>
+          <Image
+            style={themeStyles.picture}
+            source={{ uri: legodbapi.getThemePictureUrlById(item.ID) }}
+          ></Image>
+          <Image
+            style={themeStyles.logo}
+            source={{ uri: legodbapi.getThemeLogoUrlById(item.ID) }}
+            resizeMethod={"scale"}
+            resizeMode={"contain"}
+          ></Image>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  setRenderItem = ({ item }: { item: LegoSet }) => {
+    return (
+      <View style={setStyles.item}>
+        <TouchableOpacity
+          style={{ height: "100%", width: "100%" }}
+          onPress={() => this.legoSetPress(item)}
+        >
+          <Image
+            style={setStyles.picture}
+            source={{ uri: item.ImgUrl }}
+            resizeMethod={"scale"}
+            resizeMode={"contain"}
+          ></Image>
+          <View style={setStyles.info}>
+            <Text style={setStyles.name}>{item.Name}</Text>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Text style={setStyles.year}>{item.Year}</Text>
+              <Text style={setStyles.id}>{item.ID}</Text>
+            </View>
+            <Text style={setStyles.nbParts}>({item.NumParts} parts)</Text>
+          </View>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -114,26 +133,11 @@ export default class SetsScreen extends Component<
     this.setState({ setList: [] });
   };
 
-  setRenderItem = ({ item }: { item: LegoSet }) => {
-    return (
-      <View style={setStyles.item}>
-        <Image
-          style={setStyles.picture}
-          source={{ uri: item.ImgUrl }}
-          resizeMethod={"scale"}
-          resizeMode={"contain"}
-        ></Image>
-        <Text style={setStyles.name}>{item.Name}</Text>
-        <View style={setStyles.info}>
-          <View>
-            <Text style={setStyles.year}>{item.Year}</Text>
-            <Text style={setStyles.id}>{item.ID}</Text>
-          </View>
-          <Text style={setStyles.nbParts}>{item.NumParts}</Text>
-        </View>
-      </View>
-    );
+  legoSetPress = (item: LegoSet) => {
+    this.props.navigation.push("SetDetails", { id: item.ID });
   };
+
+  legoThemePress = () => {};
 
   header = (
     <View style={screenStyles.header}>
@@ -285,7 +289,7 @@ const setStyles = StyleSheet.create({
   item: {
     overflow: "hidden",
     flex: 0.47,
-    height: 200,
+    height: 250,
     borderRadius: 5,
     backgroundColor: "white",
     shadowColor: "black",
@@ -303,11 +307,19 @@ const setStyles = StyleSheet.create({
   },
   name: {
     fontWeight: "bold",
-    marginHorizontal: 10,
-    marginVertical: 4,
+    marginVertical: 2,
   },
-  id: {},
-  nbParts: {},
-  year: {},
-  info: {},
+  id: {
+    fontStyle: "italic",
+    color: "gray",
+  },
+  nbParts: {
+    fontStyle: "italic",
+    color: "gray",
+  },
+  year: {
+    fontStyle: "italic",
+    color: "gray",
+  },
+  info: { margin: 7 },
 });
