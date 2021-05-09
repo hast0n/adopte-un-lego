@@ -27,12 +27,12 @@ export default class ThemeSearchScreen extends Component<
   componentDidMount() {
     legodbapi.getThemeByID(this.props.route.params.id).then((legoTheme) => {
       this.setState({ theme: legoTheme });
-    });
-    legodbapi
-      .searchLegoSetByThemeId(this.props.route.params.id)
-      .then((sets) => {
+
+      legodbapi.searchLegoSetByThemeId(legoTheme.ID).then((sets) => {
+        console.log(sets);
         this.setState({ setList: sets });
       });
+    });
   }
 
   render() {
