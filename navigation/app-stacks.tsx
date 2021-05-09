@@ -107,6 +107,7 @@ export interface SetDetailScreenProps {
 
 export interface MinifigDetailScreenProps {
   navigation: StackNavigationProp<RootStackParamList, "MinifigDetails">;
+  route: RouteProp<RootStackParamList, "MinifigDetails">;
 }
 
 export interface ThemeSearchScreenProps {

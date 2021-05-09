@@ -1,9 +1,7 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, FlatList, Image } from "react-native";
+import { StyleSheet, Text, View, FlatList, Image, Linking } from "react-native";
 import { Divider } from "react-native-elements";
-import { SetsScreenProps } from "../navigation/app-stacks";
 import legodbapi from "../services/legodbapi.service";
-import Input from "../components/Input";
 import LegoTheme from "../services/legotheme.model";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import LegoMinifig from "../services/legominifig.model";
@@ -53,8 +51,33 @@ export default class MinifigDetailScreen extends Component<
           resizeMode={"contain"}
         ></Image>
         <View style={styles.infos}>
-          <Text style={styles.title}>{minifig.Name}</Text>
-          <Divider style={styles.divider}></Divider>
+          <View
+            style={{
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
+          >
+            <View>
+              <Text style={styles.title}>{minifig.Name}</Text>
+              <Text style={styles.id}>ID: {minifig.ID}</Text>
+            </View>
+            <Text style={styles.infoHint}>Information about this Minifig</Text>
+            <Divider style={styles.divider}></Divider>
+            <View style={{ height: 90, justifyContent: "space-between" }}>
+              <Text style={styles.key}>
+                Number of parts in this set:
+                <Text style={styles.value}> {minifig.NumParts}</Text>
+              </Text>
+              <Text
+                style={styles.link}
+                onPress={() => Linking.openURL(minifig.FigUrl)}
+              >
+                See more info on Rebrickable...
+              </Text>
+              <Text style={styles.key}>Date de dernière modification :</Text>
+              <Text style={styles.value}> {minifig.LastModified}</Text>
+            </View>
+          </View>
         </View>
       </ScrollView>
     );
@@ -69,15 +92,39 @@ const styles = StyleSheet.create({
     width: "100%",
     alignSelf: "stretch",
   },
-  infos: {},
+  infos: { margin: 10 },
   title: {
     fontSize: 21,
     fontWeight: "bold",
+  },
+  value: {
+    fontSize: 15,
+    fontWeight: "bold",
+    fontStyle: "italic",
   },
   divider: {
     marginVertical: 20,
     backgroundColor: "gray",
     height: 0.3,
     width: 370,
+  },
+  key: {
+    fontSize: 15,
+  },
+  link: {
+    color: "blue",
+    marginTop: 5,
+    textDecorationLine: "underline",
+  },
+  id: {
+    fontStyle: "italic",
+    color: "gray",
+  },
+  infoHint: {
+    marginTop: 20,
+    color: "tomato",
+    fontSize: 21,
+    marginBottom: 0,
+    fontWeight: "bold",
   },
 });
