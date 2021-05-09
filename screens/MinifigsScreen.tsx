@@ -11,7 +11,7 @@ import MinifigFlatlist from "../components/MinifigFlatlist";
 
 interface MinifigsScreenState {
   minifigList: Array<LegoMinifig>;
-  themeList: Array<LegoTheme>; // not supposed to be updated but might be more efficient to store it there ¯\_(ツ)_/¯
+  totalList: Array<LegoMinifig>; // not supposed to be updated but might be more efficient to store it there ¯\_(ツ)_/¯
   currentSearch: string;
 }
 
@@ -21,39 +21,12 @@ export default class MinifigsScreen extends Component<
 > {
   state: MinifigsScreenState = {
     minifigList: [],
-    themeList: [],
+    totalList: [],
     currentSearch: "",
   };
 
-  allowedThemes: number[] = [
-    602,
-    576,
-    693,
-    435,
-    577,
-    155,
-    676,
-    494,
-    246,
-    252,
-    610,
-    621,
-    535,
-    22,
-    608,
-    579,
-    504,
-    601,
-    158,
-    695,
-    50,
-    1,
-    690,
-    696,
-  ];
-
-  getThemes = () => {
-    return legodbapi.getAllThemes();
+  getMinifigs = () => {
+    return legodbapi.getAllLegoMinifigs();
   };
 
   componentDidMount() {
@@ -67,11 +40,9 @@ export default class MinifigsScreen extends Component<
     // });
 
     // Method 2: Is really not effective as we retrive the entire theme database and then filter it...
-    legodbapi.getAllThemes().then((themes) => {
+    legodbapi.getAllLegoMinifigs(100).then((minifigs) => {
       this.setState({
-        themeList: themes.filter((theme) =>
-          this.allowedThemes.includes(theme.ID)
-        ),
+        totalList: minifigs,
       });
     });
   }
@@ -100,10 +71,10 @@ export default class MinifigsScreen extends Component<
             onSearchSubmit={this.onSearchSubmit}
             bringBackThemes={this.bringBackThemes}
           />
-          <Text style={screenStyles.title}>Themes</Text>
-          <ThemeFlatlist
-            itemList={this.state.themeList}
-            legoThemePress={this.legoThemePress}
+          <Text style={screenStyles.title}>CMinifigs</Text>
+          <MinifigFlatlist
+            itemList={this.state.totalList}
+            legoMinifigPress={this.legoThemePress}
           />
         </View>
       );
