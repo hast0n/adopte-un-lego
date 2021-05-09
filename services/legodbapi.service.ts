@@ -34,6 +34,9 @@ interface IPart {
     part_url: string;
     part_img_url: string;
   };
+  color: {
+    name: string;
+  };
   quantity: number;
 }
 
@@ -211,7 +214,8 @@ class LegoDbApi {
       part.part.part_cat_id,
       part.part.part_url,
       part.part.part_img_url,
-      part.quantity
+      part.quantity,
+      part.color.name
     );
   }
 

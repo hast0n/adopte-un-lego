@@ -29,7 +29,6 @@ export default class ThemeSearchScreen extends Component<
       this.setState({ theme: legoTheme });
 
       legodbapi.searchLegoSetByThemeId(legoTheme.ID).then((sets) => {
-        console.log(sets);
         this.setState({ setList: sets });
       });
     });

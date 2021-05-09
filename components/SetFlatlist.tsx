@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, FlatList } from "react-native";
+import { StyleSheet, FlatList, View } from "react-native";
 import LegoSet from "../services/legoset.model";
 import SetItem from "../components/SetItem";
 
@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
   list: {
     flex: 1,
     alignSelf: "stretch",
+    height: "100%",
   },
   columnWrapper: {
     justifyContent: "space-between",

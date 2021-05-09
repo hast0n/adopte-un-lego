@@ -83,7 +83,7 @@ export default class SetsScreen extends Component<
   };
 
   bringBackThemes = () => {
-    this.setState({ setList: [] });
+    this.setState({ setList: [], currentSearch: "" });
   };
 
   legoSetPress = (item: LegoSet) => {
@@ -95,28 +95,30 @@ export default class SetsScreen extends Component<
   };
 
   render() {
-    if (this.state.setList.length < 1) {
+    const setList = this.state.setList;
+    const search = this.state.currentSearch;
+    if (setList.length < 1 && search == "") {
       return (
-        <View style={screenStyles.container}>
+        <View style={styles.container}>
           <SetsScreenHeader
             onSearchSubmit={this.onSearchSubmit}
             bringBackThemes={this.bringBackThemes}
           />
-          <Text style={screenStyles.title}>Themes</Text>
+          <Text style={styles.title}>Themes</Text>
           <ThemeFlatlist
             itemList={this.state.themeList}
             legoThemePress={this.legoThemePress}
           />
         </View>
       );
-    } else {
+    } else if (setList.length > 1) {
       return (
-        <View style={screenStyles.container}>
+        <View style={styles.container}>
           <SetsScreenHeader
             onSearchSubmit={this.onSearchSubmit}
             bringBackThemes={this.bringBackThemes}
           />
-          <Text style={screenStyles.title}>
+          <Text style={styles.title}>
             Search results for "{this.state.currentSearch}"
           </Text>
           <SetFlatlist
@@ -125,11 +127,29 @@ export default class SetsScreen extends Component<
           />
         </View>
       );
+    } else {
+      return (
+        <View style={styles.container}>
+          <SetsScreenHeader
+            onSearchSubmit={this.onSearchSubmit}
+            bringBackThemes={this.bringBackThemes}
+          />
+          <Text style={styles.title}>
+            Search results for "{this.state.currentSearch}"
+          </Text>
+          <View style={styles.emptiness}>
+            <Text>Wow much empty...</Text>
+            <Text style={{ marginTop: 20, fontSize: 30, color: "lightgray" }}>
+              ¯\_(ツ)_/¯
+            </Text>
+          </View>
+        </View>
+      );
     }
   }
 }
 
-const screenStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
@@ -159,5 +179,11 @@ const screenStyles = StyleSheet.create({
     fontSize: 16,
     marginHorizontal: 22,
     marginBottom: 10,
+  },
+  emptiness: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "stretch",
   },
 });

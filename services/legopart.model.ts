@@ -5,6 +5,7 @@ export default class LegoPart {
     public CategoryID: number,
     public PartUrl: string,
     public ImgUrl: string,
-    public quantity: number
+    public quantity: number,
+    public color: string
   ) {}
 }
