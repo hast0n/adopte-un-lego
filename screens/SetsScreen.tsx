@@ -3,14 +3,14 @@ import { StyleSheet, Text, View, FlatList, Image } from "react-native";
 import { Divider } from "react-native-elements";
 import { SetsScreenProps } from "../navigation/app-stacks";
 import legodbapi from "../services/legodbapi.service";
-import Input from "../components/Input";
-import Set from "../services/legoset.model";
 import LegoTheme from "../services/legotheme.model";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import LegoSet from "../services/legoset.model";
+import ThemeFlatlist from "../components/ThemeFlatlist";
+import SetsScreenHeader from "../components/SetsScreenHeader";
+import SetFlatlist from "../components/SetFlatlist";
 
 interface SetsScreenState {
-  setList: Array<Set>;
+  setList: Array<LegoSet>;
   themeList: Array<LegoTheme>; // not supposed to be updated but might be more efficient to store it there ¯\_(ツ)_/¯
   currentSearch: string;
 }
@@ -82,53 +82,6 @@ export default class SetsScreen extends Component<
     });
   };
 
-  themeRenderItem = ({ item }: { item: LegoTheme }) => {
-    return (
-      <View style={themeStyles.item}>
-        <TouchableOpacity style={{ height: "100%", width: "100%" }}>
-          <Image
-            style={themeStyles.picture}
-            source={{ uri: legodbapi.getThemePictureUrlById(item.ID) }}
-          ></Image>
-          <Image
-            style={themeStyles.logo}
-            source={{ uri: legodbapi.getThemeLogoUrlById(item.ID) }}
-            resizeMethod={"scale"}
-            resizeMode={"contain"}
-          ></Image>
-        </TouchableOpacity>
-      </View>
-    );
-  };
-
-  setRenderItem = ({ item }: { item: LegoSet }) => {
-    return (
-      <View style={setStyles.item}>
-        <TouchableOpacity
-          style={{ height: "100%", width: "100%" }}
-          onPress={() => this.legoSetPress(item)}
-        >
-          <Image
-            style={setStyles.picture}
-            source={{ uri: item.ImgUrl }}
-            resizeMethod={"scale"}
-            resizeMode={"contain"}
-          ></Image>
-          <View style={setStyles.info}>
-            <Text style={setStyles.name}>{item.Name}</Text>
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <Text style={setStyles.year}>{item.Year}</Text>
-              <Text style={setStyles.id}>{item.ID}</Text>
-            </View>
-            <Text style={setStyles.nbParts}>({item.NumParts} parts)</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-    );
-  };
-
   bringBackThemes = () => {
     this.setState({ setList: [] });
   };
@@ -137,62 +90,41 @@ export default class SetsScreen extends Component<
     this.props.navigation.push("SetDetails", { id: item.ID });
   };
 
-  legoThemePress = () => {};
-
-  header = (
-    <View style={screenStyles.header}>
-      <Text style={screenStyles.hint}>
-        Search a Lego set by name or browse the collection by theme
-      </Text>
-
-      <Input
-        onSubmitEditing={this.onSearchSubmit}
-        placeholder="Search a Lego set"
-        clearAfterSubmit={false}
-        showDismissButton={true}
-        onDismissPress={this.bringBackThemes}
-      />
-
-      <Divider style={screenStyles.divider} />
-    </View>
-  );
+  legoThemePress = (item: LegoTheme) => {
+    this.props.navigation.push("ThemeSearch", {
+      id: item.ID,
+      legoSetPress: () => null,
+    });
+  };
 
   render() {
     if (this.state.setList.length < 1) {
       return (
         <View style={screenStyles.container}>
-          {this.header}
-
+          <SetsScreenHeader
+            onSearchSubmit={this.onSearchSubmit}
+            bringBackThemes={this.bringBackThemes}
+          />
           <Text style={screenStyles.title}>Themes</Text>
-
-          <FlatList
-            columnWrapperStyle={themeStyles.columnWrapper}
-            numColumns={3}
-            key={3}
-            data={this.state.themeList}
-            style={themeStyles.list}
-            renderItem={this.themeRenderItem}
-            keyExtractor={(item) => item.ID.toString()}
+          <ThemeFlatlist
+            itemList={this.state.themeList}
+            legoThemePress={this.legoThemePress}
           />
         </View>
       );
     } else {
       return (
         <View style={screenStyles.container}>
-          {this.header}
-
+          <SetsScreenHeader
+            onSearchSubmit={this.onSearchSubmit}
+            bringBackThemes={this.bringBackThemes}
+          />
           <Text style={screenStyles.title}>
             Search results for "{this.state.currentSearch}"
           </Text>
-
-          <FlatList
-            columnWrapperStyle={setStyles.columnWrapper}
-            numColumns={2}
-            key={2}
-            data={this.state.setList}
-            style={setStyles.list}
-            renderItem={this.setRenderItem}
-            keyExtractor={(item) => item.ID.toString()}
+          <SetFlatlist
+            itemList={this.state.setList}
+            legoSetPress={this.legoSetPress}
           />
         </View>
       );
@@ -231,95 +163,4 @@ const screenStyles = StyleSheet.create({
     marginHorizontal: 22,
     marginBottom: 10,
   },
-});
-
-const themeStyles = StyleSheet.create({
-  list: {
-    flex: 1,
-    alignSelf: "stretch",
-  },
-  columnWrapper: {
-    justifyContent: "space-between",
-    marginHorizontal: 21,
-    marginVertical: 10,
-  },
-  item: {
-    overflow: "hidden",
-    width: 115,
-    height: 130,
-    borderRadius: 5,
-    backgroundColor: "white",
-    shadowColor: "black",
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    elevation: 5,
-  },
-  logo: {
-    flex: 1,
-    width: "90%",
-    height: undefined,
-    alignSelf: "center",
-    marginBottom: 3,
-  },
-  picture: {
-    height: 100,
-    width: 100,
-    alignSelf: "center",
-  },
-  divider: {
-    backgroundColor: "gray",
-    height: 0.3,
-    width: 30,
-    alignSelf: "center",
-  },
-});
-
-const setStyles = StyleSheet.create({
-  list: {
-    flex: 1,
-    alignSelf: "stretch",
-  },
-  columnWrapper: {
-    justifyContent: "space-between",
-    marginHorizontal: 21,
-    marginVertical: 10,
-  },
-  item: {
-    overflow: "hidden",
-    flex: 0.47,
-    height: 250,
-    borderRadius: 5,
-    backgroundColor: "white",
-    shadowColor: "black",
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    elevation: 5,
-  },
-  picture: {
-    flex: 1,
-    height: undefined,
-    width: "100%",
-    alignSelf: "center",
-  },
-  name: {
-    fontWeight: "bold",
-    marginVertical: 2,
-  },
-  id: {
-    fontStyle: "italic",
-    color: "gray",
-  },
-  nbParts: {
-    fontStyle: "italic",
-    color: "gray",
-  },
-  year: {
-    fontStyle: "italic",
-    color: "gray",
-  },
-  info: { margin: 7 },
 });

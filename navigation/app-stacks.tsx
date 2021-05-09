@@ -1,10 +1,14 @@
 import React from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { RouteProp } from "@react-navigation/core";
 import { createStackNavigator } from "@react-navigation/stack";
 import SetsScreen from "../screens/SetsScreen";
 import PartsScreen from "../screens/SetsScreen";
 import MinifigsScreen from "../screens/MinifigsScreen";
 import SetDetailScreen from "../screens/SetDetailScreen";
+import MinifigDetailScreen from "../screens/MinifigDetailScreen";
+import ThemeSearchScreen from "../screens/ThemeSearchScreen";
+import LegoSet from "../services/legoset.model";
 
 // Define view names and associated params
 // undefined = no params passed to view
@@ -13,7 +17,8 @@ export type RootStackParamList = {
   Parts: undefined;
   Minifigs: undefined;
   SetDetails: { id: string };
-  ThemeSearch: { id: string };
+  MinifigDetails: { id: string };
+  ThemeSearch: { id: number; legoSetPress: (item: LegoSet) => void };
 };
 
 // Define view stack inside Sets tab
@@ -29,6 +34,7 @@ export const SetsStackScreen = () => {
     >
       <SetsStack.Screen name="Sets" component={SetsScreen} />
       <SetsStack.Screen name="SetDetails" component={SetDetailScreen} />
+      <SetsStack.Screen name="ThemeSearch" component={ThemeSearchScreen} />
     </SetsStack.Navigator>
   );
 };
@@ -61,7 +67,6 @@ export const PartsStackScreen = () => {
       }}
     >
       <PartsStack.Screen name="Parts" component={PartsScreen} />
-      <PartsStack.Screen name="Minifigs" component={MinifigsScreen} />
     </PartsStack.Navigator>
   );
 };
@@ -77,8 +82,8 @@ export const MinifigsStackScreen = () => {
         title: "Lego Minifigs",
       }}
     >
-      <MinifigsStack.Screen name="Parts" component={PartsScreen} />
       <MinifigsStack.Screen name="Minifigs" component={MinifigsScreen} />
+      <SetsStack.Screen name="MinifigDetails" component={MinifigDetailScreen} />
     </MinifigsStack.Navigator>
   );
 };
@@ -97,8 +102,14 @@ export interface PartsScreenProps {
 
 export interface SetDetailScreenProps {
   navigation: StackNavigationProp<RootStackParamList, "SetDetails">;
+  route: RouteProp<RootStackParamList, "SetDetails">;
+}
+
+export interface MinifigDetailScreenProps {
+  navigation: StackNavigationProp<RootStackParamList, "MinifigDetails">;
 }
 
 export interface ThemeSearchScreenProps {
   navigation: StackNavigationProp<RootStackParamList, "ThemeSearch">;
+  route: RouteProp<RootStackParamList, "ThemeSearch">;
 }

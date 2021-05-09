@@ -1,6 +1,6 @@
 import LegoSet from "./legoset.model";
 import LegoPart from "./legopart.model";
-import Minifig from "./legominifig.model";
+import LegoMinifig from "./legominifig.model";
 import LegoTheme from "./legotheme.model";
 
 const key = "fd9dac4a20bbe4cd0b747c92c2532917";
@@ -76,13 +76,13 @@ class LegoDbApi {
 
   // ---- MINIFIGS ----
   // .recup des minifigs en fonction d'un ou plusieurs mot
-  searchMinifigByTerm(term: string): Promise<Array<Minifig>> {
+  searchLegoMinifigByTerm(term: string): Promise<Array<LegoMinifig>> {
     return this.fetchFigsFromApi(
       `${rootEndpoint}/minifigs/?key=${key}&search=${term}`
     ).then((figs) => this.createMinifigs(figs));
   }
-  // .recup 1 minifig en fonction de l'id du set
-  getMinifigById(id: string): Promise<Minifig> {
+  // .recup 1 minifig en fonction de son id
+  getLegoMinifigById(id: string): Promise<LegoMinifig> {
     return this.fetchFigFromApi(
       `${rootEndpoint}/minifigs/${id}/?key=${key}`
     ).then((fig) => this.createMinifig(fig));
@@ -185,12 +185,12 @@ class LegoDbApi {
     );
   }
 
-  private createMinifigs(figs: Array<IFig>): Array<Minifig> {
+  private createMinifigs(figs: Array<IFig>): Array<LegoMinifig> {
     return figs.map((fig) => this.createMinifig(fig));
   }
 
-  private createMinifig(fig: IFig): Minifig {
-    return new Minifig(
+  private createMinifig(fig: IFig): LegoMinifig {
+    return new LegoMinifig(
       fig.set_num,
       fig.name,
       fig.num_parts,

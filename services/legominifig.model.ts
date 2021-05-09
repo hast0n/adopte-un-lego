@@ -1,4 +1,4 @@
-export default class Minifig {
+export default class LegoMinifig {
   constructor(
     public ID: string,
     public Name: string,
