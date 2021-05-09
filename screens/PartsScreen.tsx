@@ -28,7 +28,6 @@ export default class PartsScreen extends Component<
 
     return (
       <View>
-        <Text>Partsssss</Text>
         <FlatList
           data={this.state.listCategories}
           renderItem={({ item }: { item: PartCategory }) => (
