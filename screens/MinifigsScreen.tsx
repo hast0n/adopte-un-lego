@@ -6,7 +6,7 @@ import legodbapi from "../services/legodbapi.service";
 import LegoTheme from "../services/legotheme.model";
 import LegoMinifig from "../services/legominifig.model";
 import ThemeFlatlist from "../components/ThemeFlatlist";
-import MinifigsScreenHeader from "../components/SetsScreenHeader";
+import MinifigsScreenHeader from "../components/MinifigsScreenHeader";
 import MinifigFlatlist from "../components/MinifigFlatlist";
 
 interface MinifigsScreenState {
