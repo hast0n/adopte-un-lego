@@ -3,12 +3,11 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/core";
 import { createStackNavigator } from "@react-navigation/stack";
 import SetsScreen from "../screens/SetsScreen";
-import PartsScreen from "../screens/SetsScreen";
+import PartsScreen from "../screens/PartsScreen";
 import MinifigsScreen from "../screens/MinifigsScreen";
 import SetDetailScreen from "../screens/SetDetailScreen";
 import MinifigDetailScreen from "../screens/MinifigDetailScreen";
 import ThemeSearchScreen from "../screens/ThemeSearchScreen";
-import LegoSet from "../services/legoset.model";
 
 // Define view names and associated params
 // undefined = no params passed to view
