@@ -22,7 +22,7 @@ export type RootStackParamList = {
   SetDetails: { id: string };
 <<<<<<< HEAD
   MinifigDetails: { id: string };
-  ThemeSearch: { id: string };
+  ThemeSearch: { id: number; legoSetPress: (item: LegoSet) => void };
 =======
   ThemeSearch: { id: number; legoSetPress: (item: LegoSet) => void };
 >>>>>>> 42cab7e178e8fd478ea6a56714c05357c479be67
