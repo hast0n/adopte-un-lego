@@ -27,18 +27,14 @@ interface IFig {
 }
 
 interface IPart {
-  part_num: string;
-  name: string;
-  part_cat_id: number;
-  year_from: number;
-  year_to: number;
-  part_url: string;
-  part_img_url: string;
-  prints: any;
-  molds: any;
-  alternates: any;
-  external_ids: any;
-  print_of: string;
+  part: {
+    part_num: string;
+    name: string;
+    part_cat_id: number;
+    part_url: string;
+    part_img_url: string;
+  };
+  quantity: number;
 }
 
 interface ITheme {
@@ -95,9 +91,9 @@ class LegoDbApi {
   }
 
   // ---- PARTS ----
-  getPartsBySetID(id: string): Promise<Array<LegoPart>> {
+  getPartsBySetID(id: string, num: number = 100): Promise<Array<LegoPart>> {
     return this.fetchPartsFromApi(
-      `${rootEndpoint}/sets/${id}/parts/?key=${key}`
+      `${rootEndpoint}/sets/${id}/parts/?key=${key}&page_size=${num}`
     ).then((parts) => this.createLegoParts(parts));
   }
 
@@ -146,9 +142,7 @@ class LegoDbApi {
   private fetchPartsFromApi(query: string): Promise<Array<IPart>> {
     return fetch(query)
       .then((response) => response.json())
-      .then(
-        (jsonResponse) => jsonResponse["results"].map((i) => i["part"]) || []
-      )
+      .then((jsonResponse) => jsonResponse["results"] || [])
       .catch((error) => []);
   }
 
@@ -212,13 +206,12 @@ class LegoDbApi {
 
   private createLegoPart(part: IPart): LegoPart {
     return new LegoPart(
-      part.part_num,
-      part.name,
-      part.part_cat_id,
-      part.year_from,
-      part.year_to,
-      part.part_url,
-      part.part_img_url
+      part.part.part_num,
+      part.part.name,
+      part.part.part_cat_id,
+      part.part.part_url,
+      part.part.part_img_url,
+      part.quantity
     );
   }
 
