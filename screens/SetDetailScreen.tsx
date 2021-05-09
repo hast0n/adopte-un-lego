@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, FlatList, Image } from "react-native";
+import { StyleSheet, Text, View, FlatList, Image, Linking } from "react-native";
 import { Divider } from "react-native-elements";
 import { SetsScreenProps } from "../navigation/app-stacks";
 import legodbapi from "../services/legodbapi.service";
@@ -8,10 +8,13 @@ import LegoTheme from "../services/legotheme.model";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import LegoSet from "../services/legoset.model";
 import { SetDetailScreenProps } from "../navigation/app-stacks";
+import { Link } from "@react-navigation/native";
+import LegoPart from "../services/legopart.model";
 
 interface SetDetailScreenState {
   set: LegoSet;
   theme: LegoTheme;
+  parts: LegoPart[];
 }
 
 export default class SetDetailScreen extends Component<
@@ -34,19 +37,29 @@ export default class SetDetailScreen extends Component<
       Name: undefined,
       ParentID: undefined,
     },
+    parts: [],
   };
 
   componentDidMount() {
     legodbapi.getLegoSetById(this.props.route.params.id).then((legoSet) => {
       this.setState({ set: legoSet });
-    });
-    legodbapi.getThemeByID(this.state.set.ThemeID).then((legoTheme) => {
-      this.setState({ theme: legoTheme });
+
+      legodbapi.getThemeByID(this.state.set.ThemeID).then((legoTheme) => {
+        this.setState({ theme: legoTheme });
+      });
+
+      legodbapi
+        .getPartsBySetID(this.props.route.params.id)
+        .then((legoParts) => {
+          this.setState({ parts: legoParts });
+          console.log(legoParts);
+        });
     });
   }
 
   render() {
     const set = this.state.set;
+    const theme = this.state.theme;
     return (
       <ScrollView style={styles.container}>
         <Image
@@ -56,7 +69,50 @@ export default class SetDetailScreen extends Component<
           resizeMode={"contain"}
         ></Image>
         <View style={styles.infos}>
-          <Text style={styles.title}>{set.Name}</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <View style={{ flex: 0.6 }}>
+              <Text style={styles.title}>{set.Name}</Text>
+              <Text style={styles.id}>ID: {set.ID}</Text>
+            </View>
+            <Image
+              style={styles.logo}
+              source={{
+                uri: legodbapi.getThemeLogoUrlById(theme.ID),
+              }}
+              resizeMethod={"scale"}
+              resizeMode={"contain"}
+            ></Image>
+          </View>
+          <Text style={styles.infoHint}>Information about this set</Text>
+          <Divider style={styles.divider}></Divider>
+          <View style={{ height: 90, justifyContent: "space-between" }}>
+            <Text style={styles.key}>
+              Nuber of parts in this set:
+              <Text style={styles.value}> {set.NumParts}</Text>
+            </Text>
+            <Text style={styles.key}>
+              Release year:
+              <Text style={styles.value}> {set.Year}</Text>
+            </Text>
+            <Text style={styles.key}>
+              Series:
+              <Text style={styles.value}> {theme.Name}</Text>
+            </Text>
+            <Text
+              style={styles.link}
+              onPress={() => Linking.openURL(set.SetUrl)}
+            >
+              See more info on Rebrickable...
+            </Text>
+          </View>
+
+          <Text style={styles.infoHint}>Parts included in this set</Text>
+
           <Divider style={styles.divider}></Divider>
         </View>
       </ScrollView>
@@ -72,15 +128,46 @@ const styles = StyleSheet.create({
     width: "100%",
     alignSelf: "stretch",
   },
-  infos: {},
+  infos: {
+    margin: 10,
+  },
   title: {
-    fontSize: 21,
+    fontSize: 25,
     fontWeight: "bold",
   },
   divider: {
-    marginVertical: 20,
+    marginVertical: 10,
     backgroundColor: "gray",
     height: 0.3,
     width: 370,
+  },
+  logo: {
+    flex: 0.5,
+    height: "100%",
+    alignSelf: "center",
+  },
+  id: {
+    fontStyle: "italic",
+    color: "gray",
+  },
+  link: {
+    color: "blue",
+    marginTop: 5,
+    textDecorationLine: "underline",
+  },
+  key: {
+    fontSize: 15,
+  },
+  value: {
+    fontSize: 15,
+    fontWeight: "bold",
+    fontStyle: "italic",
+  },
+  infoHint: {
+    marginTop: 20,
+    color: "tomato",
+    fontSize: 21,
+    marginBottom: 0,
+    fontWeight: "bold",
   },
 });
