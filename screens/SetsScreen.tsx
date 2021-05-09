@@ -91,10 +91,7 @@ export default class SetsScreen extends Component<
   };
 
   legoThemePress = (item: LegoTheme) => {
-    this.props.navigation.push("ThemeSearch", {
-      id: item.ID,
-      legoSetPress: () => null,
-    });
+    this.props.navigation.push("ThemeSearch", { id: item.ID });
   };
 
   render() {

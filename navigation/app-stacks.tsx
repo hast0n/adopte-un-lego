@@ -18,7 +18,7 @@ export type RootStackParamList = {
   Minifigs: undefined;
   SetDetails: { id: string };
   MinifigDetails: { id: string };
-  ThemeSearch: { id: number; legoSetPress: (item: LegoSet) => void };
+  ThemeSearch: { id: number };
 };
 
 // Define view stack inside Sets tab
