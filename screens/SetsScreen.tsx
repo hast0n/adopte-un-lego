@@ -137,13 +137,6 @@ const screenStyles = StyleSheet.create({
     justifyContent: "flex-start",
     paddingTop: 20,
   },
-  hint: {
-    marginHorizontal: 10,
-    marginBottom: 10,
-    textAlign: "center",
-    fontSize: 18,
-    color: "gray",
-  },
   divider: {
     marginVertical: 20,
     backgroundColor: "gray",

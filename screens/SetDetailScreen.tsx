@@ -41,12 +41,12 @@ export default class SetDetailScreen extends Component<
     legodbapi.getLegoSetById(this.props.route.params.id).then((legoSet) => {
       this.setState({ set: legoSet });
 
-      legodbapi.getThemeByID(this.state.set.ThemeID).then((legoTheme) => {
+      legodbapi.getThemeByID(legoSet.ThemeID).then((legoTheme) => {
         this.setState({ theme: legoTheme });
       });
 
       legodbapi
-        .getPartsBySetID(this.props.route.params.id)
+        .getPartsBySetID(legoSet.ID, legoSet.NumParts)
         .then((legoParts) => {
           this.setState({ parts: legoParts });
         });
@@ -109,21 +109,23 @@ export default class SetDetailScreen extends Component<
           </View>
 
           <Text style={styles.infoHint}>Parts included in this set</Text>
-
-          {[...parts].map((part) => {
-            return (
-              <View key={part.ID + Math.random()} style={styles.partStack}>
-                <Image
-                  source={{ uri: part.ImgUrl }}
-                  style={styles.part}
-                  resizeMethod={"scale"}
-                  resizeMode={"contain"}
-                ></Image>
-              </View>
-            );
-          })}
-
           <Divider style={styles.divider}></Divider>
+
+          <View style={styles.partStack}>
+            {[...parts].map((part) => {
+              return (
+                <View key={part.ID + Math.random()}>
+                  <Image
+                    source={{ uri: part.ImgUrl }}
+                    style={styles.partImg}
+                    resizeMethod={"scale"}
+                    resizeMode={"contain"}
+                  ></Image>
+                  <Text style={styles.partQuantity}>x{part.quantity}</Text>
+                </View>
+              );
+            })}
+          </View>
         </View>
       </ScrollView>
     );
@@ -181,15 +183,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   partStack: {
-    backgroundColor: "blue",
     flex: 1,
     flexDirection: "row",
     flexWrap: "wrap",
+    justifyContent: "space-between",
+    marginTop: 10,
   },
-  part: {
-    backgroundColor: "red",
-
-    height: 100,
-    width: 100,
+  partImg: {
+    height: 80,
+    width: 80,
+  },
+  partQuantity: {
+    flex: 0,
+    borderRadius: 100,
+    backgroundColor: "lightgray",
   },
 });

@@ -3,9 +3,8 @@ export default class LegoPart {
     public ID: string,
     public Name: string,
     public CategoryID: number,
-    public YearFrom: number,
-    public YearTo: number,
     public PartUrl: string,
-    public ImgUrl: string
+    public ImgUrl: string,
+    public quantity: number
   ) {}
 }
