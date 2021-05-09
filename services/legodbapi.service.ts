@@ -81,7 +81,7 @@ class LegoDbApi {
       `${rootEndpoint}/minifigs/?key=${key}&search=${term}`
     ).then((figs) => this.createMinifigs(figs));
   }
-  // .recup 1 minifig en fonction de l'id du set
+  // .recup 1 minifig en fonction de son id
   getLegoMinifigById(id: string): Promise<LegoMinifig> {
     return this.fetchFigFromApi(
       `${rootEndpoint}/minifigs/${id}/?key=${key}`
