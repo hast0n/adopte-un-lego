@@ -113,6 +113,12 @@ class LegoDbApi {
     ).then((categories) => this.createPartCategories(categories));
   }
 
+  getPartByCategoryId(id: number): Promise<Array<LegoPart>> {
+    return this.fetchPartsFromApi(
+      `${rootEndpoint}/parts/?part_cat_id=${id}`
+    ).then((parts) => this.createLegoParts(parts));
+  }
+
   // ---- THEME ----
   getAllThemes(): Promise<Array<LegoTheme>> {
     let p = fetch(`${rootEndpoint}/themes/?key=${key}&page_size=599`)
