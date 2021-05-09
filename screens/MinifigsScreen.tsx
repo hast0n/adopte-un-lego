@@ -101,8 +101,10 @@ export default class MinifigsScreen extends Component<
             bringBackThemes={this.bringBackThemes}
           />
           <Text style={screenStyles.title}>Themes</Text>
-          itemList={this.state.themeList}
-          legoThemePress={this.legoThemePress}
+          <ThemeFlatlist
+            itemList={this.state.themeList}
+            legoThemePress={this.legoThemePress}
+          />
         </View>
       );
     } else {
