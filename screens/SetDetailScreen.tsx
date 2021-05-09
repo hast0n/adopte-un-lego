@@ -1,14 +1,11 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, FlatList, Image, Linking } from "react-native";
 import { Divider } from "react-native-elements";
-import { SetsScreenProps } from "../navigation/app-stacks";
 import legodbapi from "../services/legodbapi.service";
-import Input from "../components/Input";
 import LegoTheme from "../services/legotheme.model";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import LegoSet from "../services/legoset.model";
 import { SetDetailScreenProps } from "../navigation/app-stacks";
-import { Link } from "@react-navigation/native";
 import LegoPart from "../services/legopart.model";
 
 interface SetDetailScreenState {
@@ -52,7 +49,6 @@ export default class SetDetailScreen extends Component<
         .getPartsBySetID(this.props.route.params.id)
         .then((legoParts) => {
           this.setState({ parts: legoParts });
-          console.log(legoParts);
         });
     });
   }
@@ -60,6 +56,7 @@ export default class SetDetailScreen extends Component<
   render() {
     const set = this.state.set;
     const theme = this.state.theme;
+    const parts = this.state.parts;
     return (
       <ScrollView style={styles.container}>
         <Image
@@ -112,6 +109,19 @@ export default class SetDetailScreen extends Component<
           </View>
 
           <Text style={styles.infoHint}>Parts included in this set</Text>
+
+          {[...parts].map((part) => {
+            return (
+              <View key={part.ID + Math.random()} style={styles.partStack}>
+                <Image
+                  source={{ uri: part.ImgUrl }}
+                  style={styles.part}
+                  resizeMethod={"scale"}
+                  resizeMode={"contain"}
+                ></Image>
+              </View>
+            );
+          })}
 
           <Divider style={styles.divider}></Divider>
         </View>
@@ -169,5 +179,17 @@ const styles = StyleSheet.create({
     fontSize: 21,
     marginBottom: 0,
     fontWeight: "bold",
+  },
+  partStack: {
+    backgroundColor: "blue",
+    flex: 1,
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  part: {
+    backgroundColor: "red",
+
+    height: 100,
+    width: 100,
   },
 });
