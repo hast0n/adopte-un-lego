@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, FlatList, Image } from "react-native";
 import { Divider } from "react-native-elements";
 import { SetsScreenProps } from "../navigation/app-stacks";
 import legodbapi from "../services/legodbapi.service";
-import Set from "../services/legoset.model";
 import LegoTheme from "../services/legotheme.model";
 import LegoSet from "../services/legoset.model";
 import ThemeFlatlist from "../components/ThemeFlatlist";
@@ -11,7 +10,7 @@ import SetsScreenHeader from "../components/SetsScreenHeader";
 import SetFlatlist from "../components/SetFlatlist";
 
 interface SetsScreenState {
-  setList: Array<Set>;
+  setList: Array<LegoSet>;
   themeList: Array<LegoTheme>; // not supposed to be updated but might be more efficient to store it there ¯\_(ツ)_/¯
   currentSearch: string;
 }

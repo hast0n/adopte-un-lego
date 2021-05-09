@@ -5,6 +5,7 @@ import SetsScreen from "../screens/SetsScreen";
 import PartsScreen from "../screens/SetsScreen";
 import MinifigsScreen from "../screens/MinifigsScreen";
 import SetDetailScreen from "../screens/SetDetailScreen";
+import MinifigDetailScreen from "../screens/MinifigDetailScreen";
 
 // Define view names and associated params
 // undefined = no params passed to view
@@ -13,6 +14,7 @@ export type RootStackParamList = {
   Parts: undefined;
   Minifigs: undefined;
   SetDetails: { id: string };
+  MinifigDetails: { id: string };
   ThemeSearch: { id: string };
 };
 
@@ -61,7 +63,6 @@ export const PartsStackScreen = () => {
       }}
     >
       <PartsStack.Screen name="Parts" component={PartsScreen} />
-      <PartsStack.Screen name="Minifigs" component={MinifigsScreen} />
     </PartsStack.Navigator>
   );
 };
@@ -77,8 +78,8 @@ export const MinifigsStackScreen = () => {
         title: "Lego Minifigs",
       }}
     >
-      <MinifigsStack.Screen name="Parts" component={PartsScreen} />
       <MinifigsStack.Screen name="Minifigs" component={MinifigsScreen} />
+      <SetsStack.Screen name="MinifigDetails" component={MinifigDetailScreen} />
     </MinifigsStack.Navigator>
   );
 };
@@ -97,6 +98,10 @@ export interface PartsScreenProps {
 
 export interface SetDetailScreenProps {
   navigation: StackNavigationProp<RootStackParamList, "SetDetails">;
+}
+
+export interface MinifigDetailScreenProps {
+  navigation: StackNavigationProp<RootStackParamList, "MinifigDetails">;
 }
 
 export interface ThemeSearchScreenProps {
