@@ -6,13 +6,17 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface ThemeItemProps {
   item: LegoTheme;
+  legoThemePress: (item: LegoTheme) => void;
 }
 
 export default class ThemeItem extends Component<ThemeItemProps, {}> {
   render() {
     return (
       <View style={styles.item}>
-        <TouchableOpacity style={{ height: "100%", width: "100%" }}>
+        <TouchableOpacity
+          style={{ height: "100%", width: "100%" }}
+          onPress={() => this.props.legoThemePress(this.props.item)}
+        >
           <Image
             style={styles.picture}
             source={{

@@ -1,10 +1,13 @@
 import React from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { RouteProp } from "@react-navigation/core";
 import { createStackNavigator } from "@react-navigation/stack";
 import SetsScreen from "../screens/SetsScreen";
 import PartsScreen from "../screens/SetsScreen";
 import MinifigsScreen from "../screens/MinifigsScreen";
 import SetDetailScreen from "../screens/SetDetailScreen";
+import ThemeSearchScreen from "../screens/ThemeSearchScreen";
+import LegoSet from "../services/legoset.model";
 
 // Define view names and associated params
 // undefined = no params passed to view
@@ -13,7 +16,7 @@ export type RootStackParamList = {
   Parts: undefined;
   Minifigs: undefined;
   SetDetails: { id: string };
-  ThemeSearch: { id: string };
+  ThemeSearch: { id: number; legoSetPress: (item: LegoSet) => void };
 };
 
 // Define view stack inside Sets tab
@@ -29,6 +32,7 @@ export const SetsStackScreen = () => {
     >
       <SetsStack.Screen name="Sets" component={SetsScreen} />
       <SetsStack.Screen name="SetDetails" component={SetDetailScreen} />
+      <SetsStack.Screen name="ThemeSearch" component={ThemeSearchScreen} />
     </SetsStack.Navigator>
   );
 };
@@ -97,8 +101,10 @@ export interface PartsScreenProps {
 
 export interface SetDetailScreenProps {
   navigation: StackNavigationProp<RootStackParamList, "SetDetails">;
+  route: RouteProp<RootStackParamList, "SetDetails">;
 }
 
 export interface ThemeSearchScreenProps {
   navigation: StackNavigationProp<RootStackParamList, "ThemeSearch">;
+  route: RouteProp<RootStackParamList, "ThemeSearch">;
 }

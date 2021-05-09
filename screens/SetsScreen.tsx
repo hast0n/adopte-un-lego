@@ -91,7 +91,12 @@ export default class SetsScreen extends Component<
     this.props.navigation.push("SetDetails", { id: item.ID });
   };
 
-  legoThemePress = () => {};
+  legoThemePress = (item: LegoTheme) => {
+    this.props.navigation.push("ThemeSearch", {
+      id: item.ID,
+      legoSetPress: () => null,
+    });
+  };
 
   render() {
     if (this.state.setList.length < 1) {
@@ -102,7 +107,10 @@ export default class SetsScreen extends Component<
             bringBackThemes={this.bringBackThemes}
           />
           <Text style={screenStyles.title}>Themes</Text>
-          <ThemeFlatlist itemList={this.state.themeList} />
+          <ThemeFlatlist
+            itemList={this.state.themeList}
+            legoThemePress={this.legoThemePress}
+          />
         </View>
       );
     } else {

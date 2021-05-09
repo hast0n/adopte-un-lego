@@ -5,6 +5,7 @@ import ThemeItem from "./ThemeItem";
 
 interface ThemeFlatlistProps {
   itemList: Array<LegoTheme>;
+  legoThemePress: (item: LegoTheme) => void;
 }
 
 export default class ThemeFlatlist extends Component<ThemeFlatlistProps, {}> {
@@ -17,7 +18,7 @@ export default class ThemeFlatlist extends Component<ThemeFlatlistProps, {}> {
         data={this.props.itemList}
         style={styles.list}
         renderItem={({ item }: { item: LegoTheme }) => (
-          <ThemeItem item={item} />
+          <ThemeItem item={item} legoThemePress={this.props.legoThemePress} />
         )}
         keyExtractor={(item) => item.ID.toString()}
       />
