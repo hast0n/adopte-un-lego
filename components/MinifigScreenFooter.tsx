@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
+import { StyleSheet, Text, View, Button, TouchableOpacity } from "react-native";
 import { Divider } from "react-native-elements";
 import Input from "../components/Input";
 
@@ -16,13 +16,19 @@ export default class MinifigsScreenFooter extends Component<
   render() {
     return (
       <View style={styles.header}>
-        <Button title={"leftBtn"} onPress={this.props.onClickLeft}>
-          Previous page
-        </Button>
-        <Text>{this.props.pageNumber}</Text>
-        <Button title={"rightBtn"} onPress={this.props.onClickRight}>
-          Next page
-        </Button>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={this.props.onClickLeft}
+        >
+          <Text style={styles.button}>Previous page </Text>
+        </TouchableOpacity>
+        <Text> -- Page {this.props.pageNumber} -- </Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={this.props.onClickRight}
+        >
+          <Text style={styles.button}> Next page</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -35,6 +41,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 18,
     color: "gray",
+  },
+  button: {
+    fontSize: 10,
+    backgroundColor: "white",
+    color: "blue",
   },
   divider: {
     marginVertical: 20,
