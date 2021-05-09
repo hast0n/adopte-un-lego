@@ -2,6 +2,7 @@ import LegoSet from "./legoset.model";
 import LegoPart from "./legopart.model";
 import LegoMinifig from "./legominifig.model";
 import LegoTheme from "./legotheme.model";
+import PartCategory from "./partcategory.model";
 
 const key = "fd9dac4a20bbe4cd0b747c92c2532917";
 const rootEndpoint = `https://rebrickable.com/api/v3/lego`;
@@ -41,6 +42,12 @@ interface ITheme {
   id: number;
   parent_id: number;
   name: string;
+}
+
+interface IPartCategory {
+  id: number;
+  name: string;
+  part_count: number;
 }
 
 class LegoDbApi {
@@ -98,6 +105,12 @@ class LegoDbApi {
     return this.fetchPartsFromApi(
       `${rootEndpoint}/sets/${id}/parts/?key=${key}&page_size=${num}`
     ).then((parts) => this.createLegoParts(parts));
+  }
+
+  getPartsCategories(): Promise<Array<PartCategory>> {
+    return this.fetchPartsCategories(
+      `${rootEndpoint}/part_categories/?key=${key}`
+    ).then((categories) => this.createPartCategories(categories));
   }
 
   // ---- THEME ----
@@ -170,6 +183,13 @@ class LegoDbApi {
       .catch((error) => []);
   }
 
+  private fetchPartsCategories(query: string): Promise<Array<IPartCategory>> {
+    return fetch(query)
+      .then((response) => response.json())
+      .then((jsonResponse) => jsonResponse["results"] || [])
+      .catch((error) => []);
+  }
+
   // ---- Format data types ----
   private createLegoSets(sets: Array<ISet>): Array<LegoSet> {
     return sets.map((set) => this.createLegoSet(set));
@@ -224,6 +244,20 @@ class LegoDbApi {
 
   private createTheme(theme: ITheme): LegoTheme {
     return new LegoTheme(theme.id, theme.name, theme.parent_id);
+  }
+
+  private createPartCategory(partCategory: IPartCategory): PartCategory {
+    return new PartCategory(
+      partCategory.id,
+      partCategory.name,
+      partCategory.part_count
+    );
+  }
+
+  private createPartCategories(
+    categories: Array<IPartCategory>
+  ): Array<PartCategory> {
+    return categories.map((category) => this.createPartCategory(category));
   }
 }
 
