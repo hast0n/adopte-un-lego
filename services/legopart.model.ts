@@ -1,11 +1,11 @@
 export default class LegoPart {
   constructor(
-    ID: string,
-    Name: string,
-    CategoryID: number,
-    YearFrom: number,
-    YearTo: number,
-    PartUrl: string,
-    ImgUrl: string
+    public ID: string,
+    public Name: string,
+    public CategoryID: number,
+    public YearFrom: number,
+    public YearTo: number,
+    public PartUrl: string,
+    public ImgUrl: string
   ) {}
 }

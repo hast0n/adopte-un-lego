@@ -88,6 +88,12 @@ class LegoDbApi {
     ).then((fig) => this.createMinifig(fig));
   }
 
+  getAllLegoMinifig(num: number = 100): Promise<Array<LegoMinifig>> {
+    return this.fetchFigsFromApi(
+      `${rootEndpoint}/minifigs/?key=${key}&page_size=${num}&ordering=name`
+    ).then((figs) => this.createMinifigs(figs));
+  }
+
   // ---- PARTS ----
   getPartsBySetID(id: string): Promise<Array<LegoPart>> {
     return this.fetchPartsFromApi(
@@ -201,7 +207,6 @@ class LegoDbApi {
   }
 
   private createLegoParts(parts: Array<IPart>): Array<LegoPart> {
-    console.log(parts[0]);
     return parts.map((part) => this.createLegoPart(part));
   }
 
