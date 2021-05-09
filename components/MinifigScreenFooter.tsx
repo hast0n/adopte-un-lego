@@ -22,7 +22,7 @@ export default class MinifigsScreenFooter extends Component<
         >
           <Text style={styles.button}>Previous page </Text>
         </TouchableOpacity>
-        <Text> -- Page {this.props.pageNumber} -- </Text>
+        <Text style={styles.page}> -- Page {this.props.pageNumber} -- </Text>
         <TouchableOpacity
           style={styles.button}
           onPress={this.props.onClickRight}
@@ -57,5 +57,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: 30,
     flexDirection: "row",
+  },
+  page: {
+    color: "tomato",
   },
 });
