@@ -109,11 +109,6 @@ export default class MinifigsScreen extends Component<
             itemList={this.state.totalList}
             legoMinifigPress={this.legoMinifigPress}
           />
-          <MinifigsScreenFooter
-            pageNumber={this.state.pageNumber}
-            onClickLeft={this.onLeftClick}
-            onClickRight={this.onRightClick}
-          />
         </View>
       );
     } else {
