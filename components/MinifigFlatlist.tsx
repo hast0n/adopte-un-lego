@@ -14,6 +14,7 @@ export default class MinifigFlatlist extends Component<
   {}
 > {
   render() {
+    console.log(this.props.itemList);
     return (
       <FlatList
         columnWrapperStyle={styles.columnWrapper}
@@ -28,7 +29,7 @@ export default class MinifigFlatlist extends Component<
         )}
         onEndReachedThreshold={0.1}
         onEndReached={this.props.onEndReached}
-        keyExtractor={(item) => item.ID}
+        keyExtractor={(item, i) => item.ID + i}
       />
     );
   }

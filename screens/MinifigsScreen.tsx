@@ -27,7 +27,6 @@ export default class MinifigsScreen extends Component<
   };
 
   resetMinifigList = () => {
-    console.log("reset");
     legodbapi.getAllLegoMinifigs().then((minifigs) => {
       this.setState({
         minifigList: minifigs,
@@ -69,7 +68,6 @@ export default class MinifigsScreen extends Component<
   // };
 
   loadNextPage = () => {
-    console.log("end reached");
     this.state.pageNumber++;
 
     const search = this.state.currentSearch;
@@ -95,7 +93,6 @@ export default class MinifigsScreen extends Component<
   };
 
   onSearchReset = () => {
-    console.log("search reset");
     this.resetMinifigList();
     this.setState({
       currentSearch: "",
@@ -109,7 +106,6 @@ export default class MinifigsScreen extends Component<
 
   render() {
     const search = this.state.currentSearch;
-    console.log("render");
 
     if (search.length < 1) {
       return (
