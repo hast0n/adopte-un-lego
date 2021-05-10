@@ -46,11 +46,10 @@ export default class MinifigDetailScreen extends Component<
       .getLegoMinifigById(this.props.route.params.id)
       .then((legoMinifig) => {
         this.setState({ minifig: legoMinifig });
-      });
-    legodbapi
-      .getPartsByMinifigId(parseInt(this.state.minifig.ID))
-      .then((legoParts) => {
-        this.setState({ parts: legoParts });
+
+        legodbapi.getPartsByMinifigId(legoMinifig.ID).then((legoParts) => {
+          this.setState({ parts: legoParts });
+        });
       });
   }
 
@@ -118,6 +117,7 @@ export default class MinifigDetailScreen extends Component<
       </ScrollView>
     );
   }
+
   renderPart = (part: LegoPart) => {
     return (
       <TouchableOpacity

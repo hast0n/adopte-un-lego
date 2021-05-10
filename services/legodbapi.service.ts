@@ -139,9 +139,9 @@ class LegoDbApi {
     ).then((parts) => this.createLegoParts(parts));
   }
 
-  getPartsByMinifigId(id: number): Promise<Array<LegoPart>> {
+  getPartsByMinifigId(set_num: string): Promise<Array<LegoPart>> {
     return this.fetchPartsFromApi(
-      `${rootEndpoint}/minifigs/${id}/parts`
+      `${rootEndpoint}/minifigs/${set_num}/parts/?key=${key}`
     ).then((parts) => this.createLegoParts(parts));
   }
 

@@ -14,7 +14,6 @@ export default class MinifigFlatlist extends Component<
   {}
 > {
   render() {
-    console.log(this.props.itemList);
     return (
       <FlatList
         columnWrapperStyle={styles.columnWrapper}
