@@ -90,12 +90,16 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FCF3CF",
+    backgroundColor: "white",
     height: 50,
     width: 370,
     borderRadius: 8,
     paddingLeft: 10,
     paddingRight: 10,
+    borderColor: "tomato",
+    borderWidth: 2,
+    shadowColor: "black",
+    elevation: 7,
   },
   input: {
     flex: 1,

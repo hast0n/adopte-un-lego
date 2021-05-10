@@ -12,7 +12,14 @@ export default function App() {
   return (
     <ToastProvider placement="bottom">
       <TabNavigator />
-      <Toast placement="bottom" ref={toastRef} offset={80} />
+      <Toast
+        placement="bottom"
+        ref={toastRef}
+        offset={80}
+        style={{
+          backgroundColor: "tomato",
+        }}
+      />
     </ToastProvider>
   );
 }

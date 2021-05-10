@@ -93,37 +93,43 @@ export default class SetDetailScreen extends Component<
     const parts = this.state.parts;
     return (
       <ScrollView style={styles.container}>
-        <Image
-          style={styles.picture}
-          source={{ uri: set.ImgUrl }}
-          resizeMethod={"scale"}
-          resizeMode={"contain"}
-        ></Image>
-        <View style={styles.infos}>
+        <View style={[styles.sectionContent, { marginTop: 15 }]}>
+          <Image
+            style={styles.picture}
+            source={{ uri: set.ImgUrl }}
+            resizeMethod={"scale"}
+            resizeMode={"contain"}
+          ></Image>
+          <View>
+            <View style={styles.mainInfo}>
+              <View style={{ flex: 0.6 }}>
+                <Text style={styles.title}>{set.Name}</Text>
+                <Text style={styles.id}>ID: {set.ID}</Text>
+              </View>
+              <Image
+                style={styles.logo}
+                source={{
+                  uri: legodbapi.getThemeLogoUrlById(theme.ID),
+                }}
+                resizeMethod={"scale"}
+                resizeMode={"contain"}
+              ></Image>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.sectionTitle}>
+          <Text style={styles.infoHint}>Information about this set</Text>
+          <Divider style={styles.divider}></Divider>
+        </View>
+
+        <View style={styles.sectionContent}>
           <View
             style={{
-              flexDirection: "row",
+              height: 90,
               justifyContent: "space-between",
             }}
           >
-            <View style={{ flex: 0.6 }}>
-              <Text style={styles.title}>{set.Name}</Text>
-              <Text style={styles.id}>ID: {set.ID}</Text>
-            </View>
-            <Image
-              style={styles.logo}
-              source={{
-                uri: legodbapi.getThemeLogoUrlById(theme.ID),
-              }}
-              resizeMethod={"scale"}
-              resizeMode={"contain"}
-            ></Image>
-          </View>
-
-          <Text style={styles.infoHint}>Information about this set</Text>
-          <Divider style={styles.divider}></Divider>
-
-          <View style={{ height: 90, justifyContent: "space-between" }}>
             <Text style={styles.key}>
               Nuber of parts in this set:
               <Text style={styles.value}> {set.NumParts}</Text>
@@ -143,18 +149,23 @@ export default class SetDetailScreen extends Component<
               See more info on Rebrickable...
             </Text>
           </View>
+        </View>
 
+        <View style={styles.sectionTitle}>
           <Text style={styles.infoHint}>Minifigs included in this set</Text>
           <Divider style={styles.divider}></Divider>
+        </View>
 
-          {this.renderMinifigs()}
+        <View style={styles.sectionContent}>{this.renderMinifigs()}</View>
 
+        <View style={styles.sectionTitle}>
           <Text style={styles.infoHint}>Parts included in this set</Text>
           <Divider style={styles.divider}></Divider>
+        </View>
 
-          {this.renderParts()}
+        <View style={styles.sectionContent}>{this.renderParts()}</View>
 
-          {/* <Modal
+        {/* <Modal
               animationType="slide"
               transparent={true}
               visible={this.state.modalVisible}
@@ -162,7 +173,6 @@ export default class SetDetailScreen extends Component<
             >
               {this.renderModal()}
             </Modal> */}
-        </View>
       </ScrollView>
     );
   }
@@ -201,13 +211,13 @@ export default class SetDetailScreen extends Component<
 
         <View style={{ flexDirection: "row", width: 70 }}>
           <Text style={styles.partQuantity}>x{part.quantity}</Text>
-          <Text
+          {/* <Text
             numberOfLines={1}
             ellipsizeMode="tail"
             style={{ marginRight: 10 }}
           >
             {part.Name}
-          </Text>
+          </Text> */}
         </View>
       </TouchableOpacity>
     );
@@ -278,14 +288,16 @@ export default class SetDetailScreen extends Component<
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 10, backgroundColor: "white" },
+  container: { backgroundColor: "rgb(250, 250, 250)" },
   picture: {
     flex: 1,
     minHeight: 300,
     width: "100%",
     alignSelf: "stretch",
   },
-  infos: {
+  mainInfo: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     margin: 10,
   },
   title: {
@@ -293,10 +305,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   divider: {
-    marginVertical: 10,
     backgroundColor: "gray",
     height: 0.3,
-    width: 370,
+    width: 392,
+    margin: 3,
   },
   logo: {
     flex: 0.5,
@@ -320,8 +332,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontStyle: "italic",
   },
+  sectionTitle: {
+    padding: 10,
+  },
+  sectionContent: {
+    padding: 10,
+    marginHorizontal: 10,
+    marginBottom: 20,
+    backgroundColor: "white",
+    shadowColor: "black",
+    borderRadius: 10,
+    elevation: 4,
+  },
   infoHint: {
-    marginTop: 20,
     color: "tomato",
     fontSize: 21,
     marginBottom: 0,
@@ -331,6 +354,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     flexWrap: "wrap",
+    alignContent: "flex-start",
     justifyContent: "space-between",
     marginTop: 10,
   },
@@ -345,7 +369,6 @@ const styles = StyleSheet.create({
     backgroundColor: "lightgray",
     marginBottom: 15,
   },
-  minifigStack: {},
 });
 
 // const modalStyles = StyleSheet.create({
