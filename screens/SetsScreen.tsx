@@ -13,6 +13,7 @@ interface SetsScreenState {
   setList: Array<LegoSet>;
   themeList: Array<LegoTheme>; // not supposed to be updated but might be more efficient to store it there ¯\_(ツ)_/¯
   currentSearch: string;
+  pageNumber: number;
 }
 
 export default class SetsScreen extends Component<
@@ -23,6 +24,7 @@ export default class SetsScreen extends Component<
     setList: [],
     themeList: [],
     currentSearch: "",
+    pageNumber: 1,
   };
 
   allowedThemes: number[] = [
@@ -76,6 +78,21 @@ export default class SetsScreen extends Component<
     });
   }
 
+  loadNextPage = () => {
+    this.state.pageNumber++;
+
+    const search = this.state.currentSearch;
+    const page = this.state.pageNumber;
+
+    legodbapi.searchLegoSetByTerm(search, page, 25).then((sets) => {
+      if (sets.length > 0) {
+        this.setState({
+          setList: [...this.state.setList, ...sets],
+        });
+      }
+    });
+  };
+
   onSearchSubmit = (text: string) => {
     legodbapi.searchLegoSetByTerm(text).then((result) => {
       this.setState({ setList: result, currentSearch: text });
@@ -124,6 +141,7 @@ export default class SetsScreen extends Component<
           <SetFlatlist
             itemList={this.state.setList}
             legoSetPress={this.legoSetPress}
+            onEndReached={this.loadNextPage}
           />
         </View>
       );

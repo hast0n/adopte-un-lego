@@ -62,15 +62,23 @@ class LegoDbApi {
     ).then((set) => this.createLegoSet(set));
   }
   // .recup des sets en fonction de l'id du theme
-  searchLegoSetByThemeId(id: number): Promise<Array<LegoSet>> {
+  searchLegoSetByThemeId(
+    id: number,
+    page: number = 1,
+    size: number = 100
+  ): Promise<Array<LegoSet>> {
     return this.fetchSetsFromApi(
-      `${rootEndpoint}/sets/?key=${key}&theme_id=${id}`
+      `${rootEndpoint}/sets/?key=${key}&theme_id=${id}&page_size=${size}&page=${page}`
     ).then((sets) => this.createLegoSets(sets));
   }
   // .recup des sets en fonction d'un ou plusieurs mots
-  searchLegoSetByTerm(term: string): Promise<Array<LegoSet>> {
+  searchLegoSetByTerm(
+    term: string,
+    page: number = 1,
+    size: number = 100
+  ): Promise<Array<LegoSet>> {
     return this.fetchSetsFromApi(
-      `${rootEndpoint}/sets/?key=${key}&search=${term}`
+      `${rootEndpoint}/sets/?key=${key}&search=${term}&page=${page}&page_size=${size}`
     ).then((sets) => this.createLegoSets(sets));
   }
   // .recup des sets alternatifs (à un set particulier) en fonction de l'id du set en question

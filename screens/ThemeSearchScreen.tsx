@@ -10,6 +10,7 @@ import SetFlatlist from "../components/SetFlatlist";
 interface ThemeSearchScreenState {
   theme: LegoTheme;
   setList: Array<Set>;
+  pageNumber: number;
 }
 
 export default class ThemeSearchScreen extends Component<
@@ -23,6 +24,7 @@ export default class ThemeSearchScreen extends Component<
       ParentID: undefined,
     },
     setList: [],
+    pageNumber: 1,
   };
 
   componentDidMount() {
@@ -39,13 +41,34 @@ export default class ThemeSearchScreen extends Component<
     this.props.navigation.push("SetDetails", { id: item.ID });
   };
 
+  loadNextPage = () => {
+    this.state.pageNumber++;
+
+    const id = this.state.theme.ID;
+    const page = this.state.pageNumber;
+
+    legodbapi.searchLegoSetByThemeId(id, page, 25).then((sets) => {
+      if (sets.length > 0) {
+        this.setState({
+          setList: [...this.state.setList, ...sets],
+        });
+      }
+    });
+  };
+
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>{this.state.theme.Name}</Text>
+        <Text style={styles.title}>
+          Results for theme:{" "}
+          <Text style={{ textDecorationLine: "underline" }}>
+            {this.state.theme.Name}
+          </Text>
+        </Text>
         <SetFlatlist
           itemList={this.state.setList}
           legoSetPress={this.legoSetPress}
+          onEndReached={this.loadNextPage}
         />
       </View>
     );
@@ -69,7 +92,7 @@ const styles = StyleSheet.create({
   title: {
     alignSelf: "flex-start",
     color: "tomato",
-    fontSize: 16,
+    fontSize: 18,
     marginHorizontal: 22,
     marginBottom: 10,
   },

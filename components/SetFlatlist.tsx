@@ -6,6 +6,7 @@ import SetItem from "../components/SetItem";
 interface SetFlatlistProps {
   itemList: Array<LegoSet>;
   legoSetPress: (LegoSet) => void;
+  onEndReached: ((info: { distanceFromEnd: number }) => void) | null;
 }
 
 export default class SetFlatlist extends Component<SetFlatlistProps, {}> {
@@ -20,7 +21,9 @@ export default class SetFlatlist extends Component<SetFlatlistProps, {}> {
         renderItem={({ item }: { item: LegoSet }) => (
           <SetItem item={item} legoSetPress={this.props.legoSetPress} />
         )}
-        keyExtractor={(item) => item.ID.toString()}
+        keyExtractor={(item, i) => item.ID + i}
+        onEndReached={this.props.onEndReached}
+        onEndReachedThreshold={1}
       />
     );
   }
