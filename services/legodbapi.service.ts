@@ -154,7 +154,7 @@ class LegoDbApi {
 
   getPartByCategoryId(id: number): Promise<Array<LegoPart>> {
     return this.fetchPartsFromApi(
-      `${rootEndpoint}/parts/?part_cat_id=${id}`
+      `${rootEndpoint}/parts/?part_cat_id=${id}&key=${key}`
     ).then((parts) => this.createLegoParts(parts));
   }
 
