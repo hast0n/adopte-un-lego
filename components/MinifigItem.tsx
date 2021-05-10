@@ -30,12 +30,11 @@ export default class MinifigItem extends Component<MinifigItemProps, {}> {
                 justifyContent: "space-between",
               }}
             >
-              <Text style={styles.year}>{this.props.item.Year}</Text>
               <Text style={styles.id}>{this.props.item.ID}</Text>
+              <Text style={styles.nbParts}>
+                ({this.props.item.NumParts} parts)
+              </Text>
             </View>
-            <Text style={styles.nbParts}>
-              ({this.props.item.NumParts} parts)
-            </Text>
           </View>
         </TouchableOpacity>
       </View>

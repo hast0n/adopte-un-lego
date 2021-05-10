@@ -14,7 +14,7 @@ export default class SetFlatlist extends Component<SetFlatlistProps, {}> {
       <FlatList
         columnWrapperStyle={styles.columnWrapper}
         numColumns={2}
-        key={2}
+        key={1}
         data={this.props.itemList}
         style={styles.list}
         renderItem={({ item }: { item: LegoSet }) => (

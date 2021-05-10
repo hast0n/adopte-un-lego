@@ -8,13 +8,15 @@ import LegoSet from "../services/legoset.model";
 import { SetDetailScreenProps } from "../navigation/app-stacks";
 import LegoPart from "../services/legopart.model";
 import Toast from "react-native-simple-toast";
+import LegoMinifig from "../services/legominifig.model";
 
 interface SetDetailScreenState {
   set: LegoSet;
   theme: LegoTheme;
   parts: LegoPart[];
-  modalVisible: boolean;
-  selectedPartID: string;
+  minifigs: LegoMinifig[];
+  // modalVisible: boolean;
+  // selectedPartID: string;
 }
 
 export default class SetDetailScreen extends Component<
@@ -38,8 +40,9 @@ export default class SetDetailScreen extends Component<
       ParentID: undefined,
     },
     parts: [],
-    modalVisible: false,
-    selectedPartID: undefined,
+    minifigs: [],
+    // modalVisible: false,
+    // selectedPartID: undefined,
   };
 
   componentDidMount() {
@@ -49,6 +52,8 @@ export default class SetDetailScreen extends Component<
       legodbapi.getThemeByID(legoSet.ThemeID).then((legoTheme) => {
         this.setState({ theme: legoTheme });
       });
+
+      // legodbapi.getLegoMinifigBySetId
 
       legodbapi
         .getPartsBySetID(legoSet.ID, legoSet.NumParts)
@@ -130,6 +135,15 @@ export default class SetDetailScreen extends Component<
             </Text>
           </View>
 
+          <Text style={styles.infoHint}>Minifigs included in this set</Text>
+          <Divider style={styles.divider}></Divider>
+
+          {/* <View style={styles.minifigStack}>
+            {[...this.state.minifigs].map((fig) => {
+              return this.renderMinifig(fig);
+            })}
+          </View> */}
+
           <Text style={styles.infoHint}>Parts included in this set</Text>
           <Divider style={styles.divider}></Divider>
 
@@ -177,6 +191,8 @@ export default class SetDetailScreen extends Component<
       </TouchableOpacity>
     );
   };
+
+  renderMinifig = (fig: LegoMinifig) => {};
 
   // Part details modal: disabled - replaced by toast message
 

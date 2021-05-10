@@ -63,7 +63,7 @@ export default class MinifigDetailScreen extends Component<
             </View>
             <Text style={styles.infoHint}>Information about this Minifig</Text>
             <Divider style={styles.divider}></Divider>
-            <View style={{ height: 90, justifyContent: "space-between" }}>
+            <View style={{ height: 50, justifyContent: "space-between" }}>
               <Text style={styles.key}>
                 Number of parts in this set:
                 <Text style={styles.value}> {minifig.NumParts}</Text>
@@ -74,8 +74,8 @@ export default class MinifigDetailScreen extends Component<
               >
                 See more info on Rebrickable...
               </Text>
-              <Text style={styles.key}>Date de dernière modification :</Text>
-              <Text style={styles.value}> {minifig.LastModified}</Text>
+              {/* <Text style={styles.key}>Date de dernière modification :</Text>
+              <Text style={styles.value}> {minifig.LastModified}</Text> */}
             </View>
           </View>
         </View>
