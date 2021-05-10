@@ -119,4 +119,5 @@ export interface ThemeSearchScreenProps {
 
 export interface CategoryPartsScreenProps {
   navigation: StackNavigationProp<RootStackParamList, "CategoryParts">;
+  route: RouteProp<RootStackParamList, "CategoryParts">;
 }

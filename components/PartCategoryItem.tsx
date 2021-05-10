@@ -29,16 +29,18 @@ export default class PartCategoryItem extends Component<
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "grey",
+    backgroundColor: "#FFDE75",
     height: 40,
     paddingLeft: 30,
-    marginTop: 5,
-    marginBottom: 5,
+    marginTop: 3,
+    marginBottom: 3,
     marginLeft: 20,
     marginRight: 20,
     borderRadius: 8,
+    justifyContent: "center",
   },
   text: {
     fontSize: 20,
+    color: "dimgray",
   },
 });

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, FlatList, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { PartsScreenProps } from "../navigation/app-stacks";
 import PartCategory from "../services/partcategory.model";
 import legodbapi from "../services/legodbapi.service";
