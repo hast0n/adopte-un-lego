@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { Text, View, FlatList, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { PartsScreenProps } from "../navigation/app-stacks";
 import PartCategory from "../services/partcategory.model";
 import legodbapi from "../services/legodbapi.service";
-import PartCategoryItem from "../components/PartCategoryItem";
+import PartCategoryFlatlist from "../components/PartCategoryFlatlist";
 
 interface PartsScreenState {
   listCategories: Array<PartCategory>;
@@ -23,45 +23,25 @@ export default class PartsScreen extends Component<
     });
   }
 
-  render() {
-    //const { navigation } = this.props;
+  onPressCategory = (item: PartCategory) => {
+    this.props.navigation.push("CategoryParts", { id: item.ID });
+  };
 
+  render() {
     return (
-      <View>
-        <FlatList
-          data={this.state.listCategories}
-          renderItem={({ item }: { item: PartCategory }) => (
-            <PartCategoryItem category={item} />
-          )}
-          keyExtractor={(item) => item.ID.toString()}
+      <View style={styles.container}>
+        <PartCategoryFlatlist
+          listCategories={this.state.listCategories}
+          onPressCategory={this.onPressCategory}
         />
       </View>
     );
   }
 }
 
-const screenStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    paddingTop: 20,
-  },
-  divider: {
-    marginVertical: 20,
-    backgroundColor: "gray",
-    height: 0.3,
-    width: 370,
-  },
-  header: {
-    alignItems: "center",
-  },
-  title: {
-    alignSelf: "flex-start",
-    color: "tomato",
-    fontSize: 16,
-    marginHorizontal: 22,
-    marginBottom: 10,
   },
 });
