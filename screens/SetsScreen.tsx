@@ -8,6 +8,7 @@ import LegoSet from "../services/legoset.model";
 import ThemeFlatlist from "../components/ThemeFlatlist";
 import SetsScreenHeader from "../components/SetsScreenHeader";
 import SetFlatlist from "../components/SetFlatlist";
+import NoResults from "../components/NoResults";
 
 interface SetsScreenState {
   setList: Array<LegoSet>;
@@ -155,12 +156,8 @@ export default class SetsScreen extends Component<
           <Text style={styles.title}>
             Search results for "{this.state.currentSearch}"
           </Text>
-          <View style={styles.emptiness}>
-            <Text>Wow much empty...</Text>
-            <Text style={{ marginTop: 20, fontSize: 30, color: "lightgray" }}>
-              ¯\_(ツ)_/¯
-            </Text>
-          </View>
+
+          <NoResults />
         </View>
       );
     }
@@ -190,11 +187,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginHorizontal: 22,
     marginBottom: 10,
-  },
-  emptiness: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    alignSelf: "stretch",
   },
 });

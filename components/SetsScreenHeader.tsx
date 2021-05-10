@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginBottom: 10,
     textAlign: "center",
-    fontSize: 12,
+    fontSize: 18,
     color: "gray",
   },
   divider: {

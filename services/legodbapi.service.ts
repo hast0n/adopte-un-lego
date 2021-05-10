@@ -71,6 +71,17 @@ class LegoDbApi {
       `${rootEndpoint}/sets/?key=${key}&theme_id=${id}&page_size=${size}&page=${page}`
     ).then((sets) => this.createLegoSets(sets));
   }
+  // .recup des sets en fonction de l'id du theme
+  searchLegoSetByThemeIdAndTerm(
+    themeID: number,
+    term: string,
+    page: number = 1,
+    size: number = 100
+  ): Promise<Array<LegoSet>> {
+    return this.fetchSetsFromApi(
+      `${rootEndpoint}/sets/?key=${key}&theme_id=${themeID}&page_size=${size}&page=${page}&search=${term}`
+    ).then((sets) => this.createLegoSets(sets));
+  }
   // .recup des sets en fonction d'un ou plusieurs mots
   searchLegoSetByTerm(
     term: string,

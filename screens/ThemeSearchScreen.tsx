@@ -6,11 +6,15 @@ import LegoSet from "../services/legoset.model";
 import Set from "../services/legoset.model";
 import legodbapi from "../services/legodbapi.service";
 import SetFlatlist from "../components/SetFlatlist";
+import Input from "../components/Input";
+import { Divider } from "react-native-elements/dist/divider/Divider";
+import NoResults from "../components/NoResults";
 
 interface ThemeSearchScreenState {
   theme: LegoTheme;
   setList: Array<Set>;
   pageNumber: number;
+  currentSearch: string;
 }
 
 export default class ThemeSearchScreen extends Component<
@@ -25,15 +29,13 @@ export default class ThemeSearchScreen extends Component<
     },
     setList: [],
     pageNumber: 1,
+    currentSearch: "",
   };
 
   componentDidMount() {
     legodbapi.getThemeByID(this.props.route.params.id).then((legoTheme) => {
       this.setState({ theme: legoTheme });
-
-      legodbapi.searchLegoSetByThemeId(legoTheme.ID).then((sets) => {
-        this.setState({ setList: sets });
-      });
+      this.resetSetList();
     });
   }
 
@@ -46,13 +48,48 @@ export default class ThemeSearchScreen extends Component<
 
     const id = this.state.theme.ID;
     const page = this.state.pageNumber;
+    const search = this.state.currentSearch;
 
-    legodbapi.searchLegoSetByThemeId(id, page, 25).then((sets) => {
-      if (sets.length > 0) {
-        this.setState({
-          setList: [...this.state.setList, ...sets],
+    if (this.state.currentSearch == "") {
+      legodbapi.searchLegoSetByThemeId(id, page, 25).then((sets) => {
+        if (sets.length > 0) {
+          this.setState({
+            setList: [...this.state.setList, ...sets],
+          });
+        }
+      });
+    } else {
+      legodbapi
+        .searchLegoSetByThemeIdAndTerm(id, search, page, 25)
+        .then((sets) => {
+          if (sets.length > 0) {
+            this.setState({
+              setList: [...this.state.setList, ...sets],
+            });
+          }
         });
-      }
+    }
+  };
+
+  onSearchReset = () => {
+    this.resetSetList();
+    this.setState({
+      currentSearch: "",
+      pageNumber: 1,
+    });
+  };
+
+  onSearchSubmit = (text: string) => {
+    legodbapi
+      .searchLegoSetByThemeIdAndTerm(this.state.theme.ID, text)
+      .then((result) => {
+        this.setState({ setList: result, currentSearch: text });
+      });
+  };
+
+  resetSetList = () => {
+    legodbapi.searchLegoSetByThemeId(this.state.theme.ID).then((sets) => {
+      this.setState({ setList: sets });
     });
   };
 
@@ -65,14 +102,33 @@ export default class ThemeSearchScreen extends Component<
             {this.state.theme.Name}
           </Text>
         </Text>
+        <Input
+          placeholder={`Search a ${this.state.theme.Name} related set `}
+          clearAfterSubmit={false}
+          onSubmitEditing={this.onSearchSubmit}
+          onDismissPress={this.onSearchReset}
+          showDismissButton={true}
+        />
+        <Divider style={styles.divider}></Divider>
+
+        {this.renderSets()}
+      </View>
+    );
+  }
+
+  renderSets = () => {
+    if (this.state.setList.length > 0) {
+      return (
         <SetFlatlist
           itemList={this.state.setList}
           legoSetPress={this.legoSetPress}
           onEndReached={this.loadNextPage}
         />
-      </View>
-    );
-  }
+      );
+    } else {
+      return <NoResults />;
+    }
+  };
 }
 
 const styles = StyleSheet.create({
