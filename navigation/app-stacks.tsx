@@ -8,6 +8,7 @@ import MinifigsScreen from "../screens/MinifigsScreen";
 import SetDetailScreen from "../screens/SetDetailScreen";
 import MinifigDetailScreen from "../screens/MinifigDetailScreen";
 import ThemeSearchScreen from "../screens/ThemeSearchScreen";
+import CategoryPartsScreen from "../screens/CategoryPartsScreen";
 
 // Define view names and associated params
 // undefined = no params passed to view
@@ -18,6 +19,7 @@ export type RootStackParamList = {
   SetDetails: { id: string };
   MinifigDetails: { id: string };
   ThemeSearch: { id: number };
+  CategoryParts: { id: number };
 };
 
 // Define view stack inside Sets tab
@@ -66,6 +68,7 @@ export const PartsStackScreen = () => {
       }}
     >
       <PartsStack.Screen name="Parts" component={PartsScreen} />
+      <PartsStack.Screen name="CategoryParts" component={CategoryPartsScreen} />
     </PartsStack.Navigator>
   );
 };
@@ -112,4 +115,8 @@ export interface MinifigDetailScreenProps {
 export interface ThemeSearchScreenProps {
   navigation: StackNavigationProp<RootStackParamList, "ThemeSearch">;
   route: RouteProp<RootStackParamList, "ThemeSearch">;
+}
+
+export interface CategoryPartsScreenProps {
+  navigation: StackNavigationProp<RootStackParamList, "CategoryParts">;
 }

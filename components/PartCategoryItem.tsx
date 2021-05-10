@@ -5,6 +5,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface PartCategoryItemProps {
   category: PartCategory;
+  onPressCategory: (PartCategory) => void;
 }
 
 export default class PartCategoryItem extends Component<
@@ -16,7 +17,7 @@ export default class PartCategoryItem extends Component<
       <View style={styles.container}>
         <TouchableOpacity
           style={{ height: "100%", width: "100%" }}
-          onPress={() => null}
+          onPress={() => this.props.onPressCategory(this.props.category)}
         >
           <Text style={styles.text}>{this.props.category.Name}</Text>
         </TouchableOpacity>
@@ -29,8 +30,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "grey",
+    height: 40,
+    paddingLeft: 30,
+    marginTop: 5,
+    marginBottom: 5,
+    marginLeft: 20,
+    marginRight: 20,
+    borderRadius: 8,
   },
   text: {
-    fontSize: 18,
+    fontSize: 20,
   },
 });
