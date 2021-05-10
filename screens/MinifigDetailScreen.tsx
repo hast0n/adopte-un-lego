@@ -7,7 +7,6 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import LegoMinifig from "../services/legominifig.model";
 import LegoPart from "../services/legopart.model";
 import { MinifigDetailScreenProps } from "../navigation/app-stacks";
-import Toast from "react-native-simple-toast";
 
 interface MinifigDetailScreenState {
   minifig: LegoMinifig;
@@ -54,7 +53,7 @@ export default class MinifigDetailScreen extends Component<
   }
 
   onPartPress = (name: string) => {
-    Toast.show(name);
+    toast.show(name, { type: "warning" });
   };
 
   render() {

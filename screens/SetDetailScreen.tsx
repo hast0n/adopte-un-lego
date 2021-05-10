@@ -7,7 +7,7 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import LegoSet from "../services/legoset.model";
 import { SetDetailScreenProps } from "../navigation/app-stacks";
 import LegoPart from "../services/legopart.model";
-import Toast from "react-native-simple-toast";
+import Toast from "react-native-fast-toast";
 import LegoMinifig from "../services/legominifig.model";
 
 interface SetDetailScreenState {
@@ -73,7 +73,7 @@ export default class SetDetailScreen extends Component<
   }
 
   showToastMessage = (text: string) => {
-    Toast.show(text);
+    toast.show(text, { type: "warning" });
   };
 
   // onOpenModal = (id: string) => {

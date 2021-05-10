@@ -1,9 +1,18 @@
-import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useEffect, useRef } from "react";
+import { Icon } from "react-native-elements/dist/icons/Icon";
+import Toast, { ToastProvider } from "react-native-fast-toast";
 import { TabNavigator } from "./navigation/tab-navigation";
-import { StyleSheet, Text, View } from "react-native";
-import legodbapiService from "./services/legodbapi.service";
 
 export default function App() {
-  return <TabNavigator />;
+  const toastRef = useRef<Toast>(null);
+
+  useEffect(() => {
+    toast = toastRef.current;
+  }, []);
+  return (
+    <ToastProvider placement="bottom">
+      <TabNavigator />
+      <Toast placement="bottom" ref={toastRef} offset={80} />
+    </ToastProvider>
+  );
 }
