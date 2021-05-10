@@ -24,6 +24,7 @@ export default class MinifigDetailScreen extends Component<
       Name: undefined,
       NumParts: undefined,
       FigUrl: undefined,
+      quantity: undefined,
     },
     theme: {
       ID: undefined,

@@ -107,14 +107,18 @@ class LegoDbApi {
     ).then((figs) => this.createMinifigs(figs));
   }
 
-  // getMinifigsBySetId(set_num: number): Promise<Array<LegoMinifig>> {
-  //   let p = fetch(`${rootEndpoint}/sets/${set_num}/minifigs/?key=${key}`)
-  //     .then((response) => response.json())
-  //     .then((jsonResponse) => jsonResponse["results"] || [])
-  //     .catch((error) => []);
+  getMinifigsIdsBySetId(
+    set_num: string
+  ): Promise<{ set_num: string; quantity: number }[]> {
+    let p = fetch(`${rootEndpoint}/sets/${set_num}/minifigs/?key=${key}`)
+      .then((response) => response.json())
+      .then((jsonResponse) => jsonResponse["results"] || [])
+      .catch((error) => []);
 
-  //   p.then((results) => this.createThemes(results));
-  // }
+    return p.then(
+      (results: { set_num: string; quantity: number }[]) => results
+    );
+  }
 
   // ---- PARTS ----
   getPartsBySetID(id: string, num: number = 100): Promise<Array<LegoPart>> {
@@ -241,7 +245,8 @@ class LegoDbApi {
       fig.num_parts,
       fig.set_img_url,
       fig.set_url,
-      fig.last_modified_dt
+      fig.last_modified_dt,
+      undefined
     );
   }
 

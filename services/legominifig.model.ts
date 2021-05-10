@@ -5,6 +5,7 @@ export default class LegoMinifig {
     public NumParts: Number,
     public ImgUrl: string,
     public FigUrl: string,
-    public LastModified: string
+    public LastModified: string,
+    public quantity: number
   ) {}
 }

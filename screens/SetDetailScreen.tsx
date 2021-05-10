@@ -53,18 +53,27 @@ export default class SetDetailScreen extends Component<
         this.setState({ theme: legoTheme });
       });
 
-      // legodbapi.getLegoMinifigBySetId
-
       legodbapi
         .getPartsBySetID(legoSet.ID, legoSet.NumParts)
         .then((legoParts) => {
           this.setState({ parts: legoParts });
         });
     });
+
+    legodbapi
+      .getMinifigsIdsBySetId(this.props.route.params.id)
+      .then((figsInfo) => {
+        figsInfo.forEach((f) => {
+          legodbapi.getLegoMinifigById(f.set_num).then((minifig) => {
+            minifig.quantity = f.quantity;
+            this.setState({ minifigs: [...this.state.minifigs, minifig] });
+          });
+        });
+      });
   }
 
-  onPartPress = (name: string) => {
-    Toast.show(name);
+  showToastMessage = (text: string) => {
+    Toast.show(text);
   };
 
   // onOpenModal = (id: string) => {
@@ -138,20 +147,14 @@ export default class SetDetailScreen extends Component<
           <Text style={styles.infoHint}>Minifigs included in this set</Text>
           <Divider style={styles.divider}></Divider>
 
-          {/* <View style={styles.minifigStack}>
-            {[...this.state.minifigs].map((fig) => {
-              return this.renderMinifig(fig);
-            })}
-          </View> */}
+          {this.renderMinifigs()}
 
           <Text style={styles.infoHint}>Parts included in this set</Text>
           <Divider style={styles.divider}></Divider>
 
-          <View style={styles.partStack}>
-            {[...this.state.parts].map((part) => {
-              return this.renderPart(part);
-            })}
-            {/* <Modal
+          {this.renderParts()}
+
+          {/* <Modal
               animationType="slide"
               transparent={true}
               visible={this.state.modalVisible}
@@ -159,17 +162,35 @@ export default class SetDetailScreen extends Component<
             >
               {this.renderModal()}
             </Modal> */}
-          </View>
         </View>
       </ScrollView>
     );
   }
 
+  renderParts = () => {
+    const parts = this.state.parts;
+    if (parts.length > 0) {
+      return (
+        <View style={styles.partStack}>
+          {[...this.state.parts].map((part) => {
+            return this.renderPart(part);
+          })}
+        </View>
+      );
+    } else {
+      return (
+        <View>
+          <Text style={{ fontStyle: "italic" }}>No parts to display...</Text>
+        </View>
+      );
+    }
+  };
+
   renderPart = (part: LegoPart) => {
     return (
       <TouchableOpacity
         key={part.ID + Math.random()}
-        onPress={() => this.onPartPress(part.Name)}
+        onPress={() => this.showToastMessage(part.Name)}
       >
         <Image
           source={{ uri: part.ImgUrl }}
@@ -192,7 +213,51 @@ export default class SetDetailScreen extends Component<
     );
   };
 
-  renderMinifig = (fig: LegoMinifig) => {};
+  renderMinifigs = () => {
+    const minifigs = this.state.minifigs;
+    if (minifigs.length > 0) {
+      return (
+        <View style={styles.partStack}>
+          {[...this.state.minifigs].map((fig) => {
+            return this.renderMinifig(fig);
+          })}
+        </View>
+      );
+    } else {
+      return (
+        <View>
+          <Text style={{ fontStyle: "italic" }}>No minifig to display...</Text>
+        </View>
+      );
+    }
+  };
+
+  renderMinifig = (fig: LegoMinifig) => {
+    return (
+      <TouchableOpacity
+        key={fig.ID + Math.random()}
+        onPress={() => this.showToastMessage(fig.Name)}
+      >
+        <Image
+          source={{ uri: fig.ImgUrl }}
+          style={styles.partImg}
+          resizeMethod={"scale"}
+          resizeMode={"contain"}
+        ></Image>
+
+        <View style={{ flexDirection: "row", width: 70 }}>
+          <Text style={styles.partQuantity}>x{fig.quantity}</Text>
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={{ marginRight: 10 }}
+          >
+            {fig.Name}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   // Part details modal: disabled - replaced by toast message
 
@@ -280,6 +345,7 @@ const styles = StyleSheet.create({
     backgroundColor: "lightgray",
     marginBottom: 15,
   },
+  minifigStack: {},
 });
 
 // const modalStyles = StyleSheet.create({
