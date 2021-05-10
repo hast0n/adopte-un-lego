@@ -9,6 +9,7 @@ import { SetDetailScreenProps } from "../navigation/app-stacks";
 import LegoPart from "../services/legopart.model";
 import Toast from "react-native-fast-toast";
 import LegoMinifig from "../services/legominifig.model";
+import MinifigTile from "../components/MinifigTile";
 
 interface SetDetailScreenState {
   set: LegoSet;
@@ -229,7 +230,10 @@ export default class SetDetailScreen extends Component<
       return (
         <View style={styles.partStack}>
           {[...this.state.minifigs].map((fig) => {
-            return this.renderMinifig(fig);
+            //return this.renderMinifig(fig);
+            return (
+              <MinifigTile fig={fig} showToastMessage={this.showToastMessage} />
+            );
           })}
         </View>
       );
@@ -242,32 +246,32 @@ export default class SetDetailScreen extends Component<
     }
   };
 
-  renderMinifig = (fig: LegoMinifig) => {
-    return (
-      <TouchableOpacity
-        key={fig.ID + Math.random()}
-        onPress={() => this.showToastMessage(fig.Name)}
-      >
-        <Image
-          source={{ uri: fig.ImgUrl }}
-          style={styles.partImg}
-          resizeMethod={"scale"}
-          resizeMode={"contain"}
-        ></Image>
+  // renderMinifig = (fig: LegoMinifig) => {
+  //   return (
+  //     <TouchableOpacity
+  //       key={fig.ID + Math.random()}
+  //       onPress={() => this.showToastMessage(fig.Name)}
+  //     >
+  //       <Image
+  //         source={{ uri: fig.ImgUrl }}
+  //         style={styles.partImg}
+  //         resizeMethod={"scale"}
+  //         resizeMode={"contain"}
+  //       ></Image>
 
-        <View style={{ flexDirection: "row", width: 70 }}>
-          <Text style={styles.partQuantity}>x{fig.quantity}</Text>
-          <Text
-            numberOfLines={1}
-            ellipsizeMode="tail"
-            style={{ marginRight: 10 }}
-          >
-            {fig.Name}
-          </Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
+  //       <View style={{ flexDirection: "row", width: 70 }}>
+  //         <Text style={styles.partQuantity}>x{fig.quantity}</Text>
+  //         <Text
+  //           numberOfLines={1}
+  //           ellipsizeMode="tail"
+  //           style={{ marginRight: 10 }}
+  //         >
+  //           {fig.Name}
+  //         </Text>
+  //       </View>
+  //     </TouchableOpacity>
+  //   );
+  // };
 
   // Part details modal: disabled - replaced by toast message
 
