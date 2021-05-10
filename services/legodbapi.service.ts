@@ -82,9 +82,13 @@ class LegoDbApi {
 
   // ---- MINIFIGS ----
   // .recup des minifigs en fonction d'un ou plusieurs mot
-  searchLegoMinifigByTerm(term: string): Promise<Array<LegoMinifig>> {
+  searchLegoMinifigByTerm(
+    term: string,
+    page: number = 1,
+    size: number = 100
+  ): Promise<Array<LegoMinifig>> {
     return this.fetchFigsFromApi(
-      `${rootEndpoint}/minifigs/?key=${key}&search=${term}`
+      `${rootEndpoint}/minifigs/?key=${key}&search=${term}&page_size=${size}`
     ).then((figs) => this.createMinifigs(figs));
   }
   // .recup 1 minifig en fonction de son id
@@ -95,13 +99,22 @@ class LegoDbApi {
   }
 
   getAllLegoMinifigs(
-    num: number = 100,
-    nump: number = 1
+    page: number = 1,
+    size: number = 100
   ): Promise<Array<LegoMinifig>> {
     return this.fetchFigsFromApi(
-      `${rootEndpoint}/minifigs/?key=${key}&page=${nump}&page_size=${num}&ordering=name`
+      `${rootEndpoint}/minifigs/?key=${key}&page=${page}&page_size=${size}&ordering=name`
     ).then((figs) => this.createMinifigs(figs));
   }
+
+  // getMinifigsBySetId(set_num: number): Promise<Array<LegoMinifig>> {
+  //   let p = fetch(`${rootEndpoint}/sets/${set_num}/minifigs/?key=${key}`)
+  //     .then((response) => response.json())
+  //     .then((jsonResponse) => jsonResponse["results"] || [])
+  //     .catch((error) => []);
+
+  //   p.then((results) => this.createThemes(results));
+  // }
 
   // ---- PARTS ----
   getPartsBySetID(id: string, num: number = 100): Promise<Array<LegoPart>> {

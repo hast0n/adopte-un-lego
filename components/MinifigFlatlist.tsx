@@ -6,6 +6,7 @@ import MinifigItem from "../components/MinifigItem";
 interface MinifigFlatlistProps {
   itemList: Array<LegoMinifig>;
   legoMinifigPress: (LegoMinifig) => void;
+  onEndReached: ((info: { distanceFromEnd: number }) => void) | null;
 }
 
 export default class MinifigFlatlist extends Component<
@@ -17,7 +18,6 @@ export default class MinifigFlatlist extends Component<
       <FlatList
         columnWrapperStyle={styles.columnWrapper}
         numColumns={2}
-        key={2}
         data={this.props.itemList}
         style={styles.list}
         renderItem={({ item }: { item: LegoMinifig }) => (
@@ -26,7 +26,9 @@ export default class MinifigFlatlist extends Component<
             legoMinifigPress={this.props.legoMinifigPress}
           />
         )}
-        keyExtractor={(item) => item.ID}
+        onEndReachedThreshold={0.1}
+        onEndReached={this.props.onEndReached}
+        keyExtractor={(item) => item.ID.toString()}
       />
     );
   }

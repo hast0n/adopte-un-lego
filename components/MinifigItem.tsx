@@ -31,10 +31,10 @@ export default class MinifigItem extends Component<MinifigItemProps, {}> {
               }}
             >
               <Text style={styles.id}>{this.props.item.ID}</Text>
+              <Text style={styles.nbParts}>
+                ({this.props.item.NumParts} parts)
+              </Text>
             </View>
-            <Text style={styles.nbParts}>
-              ({this.props.item.NumParts} parts)
-            </Text>
           </View>
         </TouchableOpacity>
       </View>

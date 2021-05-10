@@ -12,7 +12,6 @@ import MinifigFlatlist from "../components/MinifigFlatlist";
 
 interface MinifigsScreenState {
   minifigList: Array<LegoMinifig>;
-  totalList: Array<LegoMinifig>; // not supposed to be updated but might be more efficient to store it there ¯\_(ツ)_/¯
   pageNumber: number;
   currentSearch: string;
 }
@@ -23,33 +22,21 @@ export default class MinifigsScreen extends Component<
 > {
   state: MinifigsScreenState = {
     minifigList: [],
-    totalList: [],
     currentSearch: "",
     pageNumber: 1,
   };
 
-  getMinifigs = () => {
-    return legodbapi.getAllLegoMinifigs();
+  resetMinifigList = () => {
+    console.log("reset");
+    legodbapi.getAllLegoMinifigs().then((minifigs) => {
+      this.setState({
+        minifigList: minifigs,
+      });
+    });
   };
 
   componentDidMount() {
-    // Get themes from API:
-
-    // Method 1: Generates a lot of requests which might block the access for a certain amount of time...
-    // this.allowedThemes.forEach((id) => {
-    //   legodbapi.getThemeByID(id).then((theme) => {
-    //     this.setState({ themeList: [theme, ...this.state.themeList] });
-    //   });
-    // });
-
-    // Method 2: Is really not effective as we retrive the entire theme database and then filter it...
-    legodbapi
-      .getAllLegoMinifigs(100, this.state.pageNumber)
-      .then((minifigs) => {
-        this.setState({
-          totalList: minifigs,
-        });
-      });
+    this.resetMinifigList();
   }
 
   onSearchSubmit = (text: string) => {
@@ -58,33 +45,62 @@ export default class MinifigsScreen extends Component<
     });
   };
 
-  onLeftClick = () => {
-    if (this.state.pageNumber != 1) {
-      this.state.pageNumber -= 1;
-      legodbapi
-        .getAllLegoMinifigs(100, this.state.pageNumber)
-        .then((minifigs) => {
+  // onLeftClick = () => {
+  //   if (this.state.pageNumber != 1) {
+  //     this.state.pageNumber -= 1;
+  //     legodbapi
+  //       .getAllLegoMinifigs(100, this.state.pageNumber)
+  //       .then((minifigs) => {
+  //         this.setState({
+  //           totalList: minifigs,
+  //         });
+  //       });
+  //   }
+  // };
+  // onRightClick = () => {
+  //   if (this.state.pageNumber != 0) {
+  //     this.state.pageNumber += 1;
+  //     legodbapi.getAllLegoMinifigs(this.state.pageNumber).then((minifigs) => {
+  //       this.setState({
+  //         totalList: minifigs,
+  //       });
+  //     });
+  //   }
+  // };
+
+  loadNextPage = () => {
+    console.log("end reached");
+    this.state.pageNumber++;
+
+    const search = this.state.currentSearch;
+    const page = this.state.pageNumber;
+
+    if (this.state.currentSearch != "") {
+      legodbapi.searchLegoMinifigByTerm(search, page, 25).then((minifigs) => {
+        if (minifigs.length > 0) {
           this.setState({
-            totalList: minifigs,
+            minifigList: [...this.state.minifigList, ...minifigs],
           });
-        });
-    }
-  };
-  onRightClick = () => {
-    if (this.state.pageNumber != 0) {
-      this.state.pageNumber += 1;
-      legodbapi
-        .getAllLegoMinifigs(100, this.state.pageNumber)
-        .then((minifigs) => {
+        }
+      });
+    } else {
+      legodbapi.getAllLegoMinifigs(page, 25).then((minifigs) => {
+        if (minifigs.length > 0) {
           this.setState({
-            totalList: minifigs,
+            minifigList: [...this.state.minifigList, ...minifigs],
           });
-        });
+        }
+      });
     }
   };
 
-  bringBackThemes = () => {
-    this.setState({ minifigList: [] });
+  onSearchReset = () => {
+    console.log("search reset");
+    this.resetMinifigList();
+    this.setState({
+      currentSearch: "",
+      pageNumber: 1,
+    });
   };
 
   legoMinifigPress = (item: LegoMinifig) => {
@@ -92,22 +108,26 @@ export default class MinifigsScreen extends Component<
   };
 
   render() {
-    if (this.state.minifigList.length < 1) {
+    const search = this.state.currentSearch;
+    console.log("render");
+
+    if (search.length < 1) {
       return (
         <View style={screenStyles.container}>
           <MinifigsScreenHeader
             onSearchSubmit={this.onSearchSubmit}
-            bringBackThemes={this.bringBackThemes}
+            bringBackThemes={this.onSearchReset}
           />
           <Text style={screenStyles.title}>Minifigs</Text>
-          <MinifigsScreenFooter
+          {/* <MinifigsScreenFooter
             pageNumber={this.state.pageNumber}
             onClickLeft={this.onLeftClick}
             onClickRight={this.onRightClick}
-          />
+          /> */}
           <MinifigFlatlist
-            itemList={this.state.totalList}
+            itemList={this.state.minifigList}
             legoMinifigPress={this.legoMinifigPress}
+            onEndReached={this.loadNextPage}
           />
         </View>
       );
@@ -116,7 +136,7 @@ export default class MinifigsScreen extends Component<
         <View style={screenStyles.container}>
           <MinifigsScreenHeader
             onSearchSubmit={this.onSearchSubmit}
-            bringBackThemes={this.bringBackThemes}
+            bringBackThemes={this.onSearchReset}
           />
           <Text style={screenStyles.title}>
             Search results for "{this.state.currentSearch}"
@@ -124,6 +144,7 @@ export default class MinifigsScreen extends Component<
           <MinifigFlatlist
             itemList={this.state.minifigList}
             legoMinifigPress={this.legoMinifigPress}
+            onEndReached={this.loadNextPage}
           />
         </View>
       );
