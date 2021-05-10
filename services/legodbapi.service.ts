@@ -28,6 +28,11 @@ interface IFig {
 }
 
 interface IPart {
+  part_num: string;
+  name: string;
+  part_cat_id: number;
+  part_url: string;
+  part_img_url: string;
   part: {
     part_num: string;
     name: string;
@@ -35,10 +40,8 @@ interface IPart {
     part_url: string;
     part_img_url: string;
   };
-  color: {
-    name: string;
-  };
   quantity: number;
+  color: { name: string };
 }
 
 interface ITheme {
@@ -280,15 +283,27 @@ class LegoDbApi {
   }
 
   private createLegoPart(part: IPart): LegoPart {
-    return new LegoPart(
-      part.part.part_num,
-      part.part.name,
-      part.part.part_cat_id,
-      part.part.part_url,
-      part.part.part_img_url,
-      part.quantity,
-      part.color.name
-    );
+    if (part.part == undefined) {
+      return new LegoPart(
+        part.part_num,
+        part.name,
+        part.part_cat_id,
+        part.part_url,
+        part.part_img_url,
+        undefined,
+        undefined
+      );
+    } else {
+      return new LegoPart(
+        part.part.part_num,
+        part.part.name,
+        part.part.part_cat_id,
+        part.part.part_url,
+        part.part.part_img_url,
+        part.quantity,
+        part.color.name
+      );
+    }
   }
 
   private createThemes(themes: Array<ITheme>): Array<LegoTheme> {
