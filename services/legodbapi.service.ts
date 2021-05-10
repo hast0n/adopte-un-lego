@@ -19,7 +19,7 @@ interface ISet {
 }
 
 interface IFig {
-  minifig_num: string;
+  set_num: string;
   name: string;
   num_parts: number;
   set_img_url: string;
@@ -246,7 +246,7 @@ class LegoDbApi {
 
   private createMinifig(fig: IFig): LegoMinifig {
     return new LegoMinifig(
-      fig.minifig_num,
+      fig.set_num,
       fig.name,
       fig.num_parts,
       fig.set_img_url,
