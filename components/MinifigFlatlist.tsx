@@ -28,7 +28,7 @@ export default class MinifigFlatlist extends Component<
         )}
         onEndReachedThreshold={0.1}
         onEndReached={this.props.onEndReached}
-        keyExtractor={(item) => item.ID.toString()}
+        keyExtractor={(item) => item.ID}
       />
     );
   }
