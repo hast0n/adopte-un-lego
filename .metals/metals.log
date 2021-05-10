@@ -1,0 +1,4 @@
+[0m2021.05.10 08:11:13 INFO  Started: Metals version 0.10.2 in workspace 'C:\Users\ericm\Documents\GitHub\projet-2021-thetchoupizfamily' for client vscode 1.56.0.[0m
+[0m2021.05.10 08:11:14 INFO  time: initialize in 0.59s[0m
+[0m2021.05.10 08:11:14 WARN  Build server is not auto-connectable.[0m
+[0m2021.05.10 08:11:14 WARN  no build tool detected in workspace 'C:\Users\ericm\Documents\GitHub\projet-2021-thetchoupizfamily'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. [0m

@@ -19,7 +19,7 @@ interface ISet {
 }
 
 interface IFig {
-  set_num: string;
+  minifig_num: string;
   name: string;
   num_parts: number;
   set_img_url: string;
@@ -119,6 +119,12 @@ class LegoDbApi {
   getPartByCategoryId(id: number): Promise<Array<LegoPart>> {
     return this.fetchPartsFromApi(
       `${rootEndpoint}/parts/?part_cat_id=${id}`
+    ).then((parts) => this.createLegoParts(parts));
+  }
+
+  getPartsByMinifigId(id: number): Promise<Array<LegoPart>> {
+    return this.fetchPartsFromApi(
+      `${rootEndpoint}/minifigs/${id}/parts`
     ).then((parts) => this.createLegoParts(parts));
   }
 
@@ -223,7 +229,7 @@ class LegoDbApi {
 
   private createMinifig(fig: IFig): LegoMinifig {
     return new LegoMinifig(
-      fig.set_num,
+      fig.minifig_num,
       fig.name,
       fig.num_parts,
       fig.set_img_url,

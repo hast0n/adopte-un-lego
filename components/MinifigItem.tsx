@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import LegoMinifig from "../services/legoset.model";
+import LegoMinifig from "../services/legominifig.model";
 
 interface MinifigItemProps {
   item: LegoMinifig;
@@ -30,7 +30,6 @@ export default class MinifigItem extends Component<MinifigItemProps, {}> {
                 justifyContent: "space-between",
               }}
             >
-              <Text style={styles.year}>{this.props.item.Year}</Text>
               <Text style={styles.id}>{this.props.item.ID}</Text>
             </View>
             <Text style={styles.nbParts}>

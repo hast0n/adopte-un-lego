@@ -26,7 +26,7 @@ export default class MinifigFlatlist extends Component<
             legoMinifigPress={this.props.legoMinifigPress}
           />
         )}
-        keyExtractor={(item) => item.ID.toString()}
+        keyExtractor={(item) => item.ID}
       />
     );
   }
