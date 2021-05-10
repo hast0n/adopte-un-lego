@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import PartCategory from "../services/partcategory.model";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
@@ -14,14 +14,12 @@ export default class PartCategoryItem extends Component<
 > {
   render() {
     return (
-      <View style={styles.container}>
-        <TouchableOpacity
-          style={{ height: "100%", width: "100%" }}
-          onPress={() => this.props.onPressCategory(this.props.category)}
-        >
-          <Text style={styles.text}>{this.props.category.Name}</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        style={styles.container}
+        onPress={() => this.props.onPressCategory(this.props.category)}
+      >
+        <Text style={styles.text}>{this.props.category.Name}</Text>
+      </TouchableOpacity>
     );
   }
 }
@@ -29,18 +27,20 @@ export default class PartCategoryItem extends Component<
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFDE75",
+    //backgroundColor: "#FFDE75",
+    backgroundColor: "rgba(255,99,71,0.6)",
     height: 40,
-    paddingLeft: 30,
     marginTop: 3,
     marginBottom: 3,
-    marginLeft: 20,
-    marginRight: 20,
+    marginLeft: 10,
+    marginRight: 10,
     borderRadius: 8,
     justifyContent: "center",
   },
   text: {
-    fontSize: 20,
+    fontSize: 18,
     color: "dimgray",
+    //color: "grey",
+    alignSelf: "center",
   },
 });

@@ -24,7 +24,10 @@ export default class PartsScreen extends Component<
   }
 
   onPressCategory = (item: PartCategory) => {
-    this.props.navigation.push("CategoryParts", { id: item.ID });
+    this.props.navigation.push("CategoryParts", {
+      id: item.ID,
+      name: item.Name,
+    });
   };
 
   render() {

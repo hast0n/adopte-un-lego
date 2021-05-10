@@ -19,7 +19,7 @@ export type RootStackParamList = {
   SetDetails: { id: string };
   MinifigDetails: { id: string };
   ThemeSearch: { id: number };
-  CategoryParts: { id: number };
+  CategoryParts: { id: number; name: string };
 };
 
 // Define view stack inside Sets tab
