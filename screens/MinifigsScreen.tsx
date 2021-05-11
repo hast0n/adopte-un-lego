@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, FlatList, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import { Divider } from "react-native-elements";
 import { MinifigsScreenProps } from "../navigation/app-stacks";
 import legodbapi from "../services/legodbapi.service";
@@ -14,6 +21,7 @@ interface MinifigsScreenState {
   minifigList: Array<LegoMinifig>;
   pageNumber: number;
   currentSearch: string;
+  loading: boolean;
 }
 
 export default class MinifigsScreen extends Component<
@@ -24,14 +32,17 @@ export default class MinifigsScreen extends Component<
     minifigList: [],
     currentSearch: "",
     pageNumber: 1,
+    loading: true,
   };
 
   resetMinifigList = () => {
+    this.setState({ loading: true });
     legodbapi.getAllLegoMinifigs().then((minifigs) => {
       this.setState({
         minifigList: minifigs,
         currentSearch: "",
         pageNumber: 1,
+        loading: false,
       });
     });
   };
@@ -41,10 +52,12 @@ export default class MinifigsScreen extends Component<
   }
 
   onSearchSubmit = (text: string) => {
+    this.setState({ loading: true });
     legodbapi.searchLegoMinifigByTerm(text).then((result) => {
       this.setState({
         minifigList: result,
         currentSearch: text,
+        loading: false,
       });
     });
   };
@@ -112,7 +125,21 @@ export default class MinifigsScreen extends Component<
   render() {
     const search = this.state.currentSearch;
 
-    if (search.length < 1) {
+    if (this.state.loading) {
+      return (
+        <View style={screenStyles.container}>
+          <MinifigsScreenHeader
+            onSearchSubmit={this.onSearchSubmit}
+            bringBackThemes={this.onSearchReset}
+          />
+          <Text style={screenStyles.title}>Minifigs</Text>
+          <ActivityIndicator
+            color="tomato"
+            style={{ alignSelf: "center", marginTop: 10 }}
+          />
+        </View>
+      );
+    } else if (search.length < 1) {
       return (
         <View style={screenStyles.container}>
           <MinifigsScreenHeader

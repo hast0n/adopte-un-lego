@@ -38,8 +38,30 @@ export default class SetsScreen extends Component<
   };
 
   allowedThemes: number[] = [
-    602, 576, 693, 435, 577, 155, 676, 494, 246, 252, 610, 621, 535, 22, 608,
-    579, 504, 601, 158, 695, 50, 1, 690, 696,
+    602,
+    576,
+    693,
+    435,
+    577,
+    155,
+    676,
+    494,
+    246,
+    252,
+    610,
+    621,
+    535,
+    22,
+    608,
+    579,
+    504,
+    601,
+    158,
+    695,
+    50,
+    1,
+    690,
+    696,
   ];
 
   getThemes = () => {
@@ -83,13 +105,14 @@ export default class SetsScreen extends Component<
   };
 
   onSearchSubmit = (text: string) => {
+    this.setState({ loading: true });
     legodbapi.searchLegoSetByTerm(text).then((result) => {
-      this.setState({ setList: result, currentSearch: text });
+      this.setState({ setList: result, currentSearch: text, loading: false });
     });
   };
 
   bringBackThemes = () => {
-    this.setState({ setList: [], currentSearch: "" });
+    this.setState({ setList: [], currentSearch: "", loading: false });
   };
 
   legoSetPress = (item: LegoSet) => {
@@ -106,12 +129,15 @@ export default class SetsScreen extends Component<
 
     if (this.state.loading) {
       return (
-        <View>
-          {/* <SetsScreenHeader
-            onSearchSubmit={(text: string) => void}
-            bringBackThemes={() => void}
-          /> */}
-          <ActivityIndicator color="tomato" />
+        <View style={styles.container}>
+          <SetsScreenHeader
+            onSearchSubmit={(text: string) => {}}
+            bringBackThemes={() => {}}
+          />
+          <ActivityIndicator
+            color="tomato"
+            style={{ alignSelf: "center", marginTop: 10 }}
+          />
         </View>
       );
     } else if (setList.length < 1 && search == "") {
