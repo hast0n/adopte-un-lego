@@ -38,30 +38,8 @@ export default class SetsScreen extends Component<
   };
 
   allowedThemes: number[] = [
-    602,
-    576,
-    693,
-    435,
-    577,
-    155,
-    676,
-    494,
-    246,
-    252,
-    610,
-    621,
-    535,
-    22,
-    608,
-    579,
-    504,
-    601,
-    158,
-    695,
-    50,
-    1,
-    690,
-    696,
+    602, 576, 693, 435, 577, 155, 676, 494, 246, 252, 610, 621, 535, 22, 608,
+    579, 504, 601, 158, 695, 50, 1, 690, 696,
   ];
 
   getThemes = () => {
@@ -84,6 +62,7 @@ export default class SetsScreen extends Component<
         themeList: themes.filter((theme) =>
           this.allowedThemes.includes(theme.ID)
         ),
+        loading: false,
       });
     });
   }

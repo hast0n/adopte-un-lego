@@ -203,15 +203,4 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginTop: 10,
   },
-  partImg: {
-    height: 80,
-    width: 80,
-  },
-  partQuantity: {
-    flex: 0,
-    paddingHorizontal: 6,
-    borderRadius: 100,
-    backgroundColor: "lightgray",
-    marginBottom: 15,
-  },
 });
