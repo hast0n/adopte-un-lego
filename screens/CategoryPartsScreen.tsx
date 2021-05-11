@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, ActivityIndicator } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import PartTilesList from "../components/PartTilesList";
 import { CategoryPartsScreenProps } from "../navigation/app-stacks";
@@ -8,6 +8,8 @@ import LegoPart from "../services/legopart.model";
 
 interface CategoryPartsScreenState {
   listParts: Array<LegoPart>;
+  pageNumber: number;
+  loading: boolean;
 }
 
 export default class CategoryPartsScreen extends Component<
@@ -16,30 +18,58 @@ export default class CategoryPartsScreen extends Component<
 > {
   state: CategoryPartsScreenState = {
     listParts: [],
+    pageNumber: 1,
+    loading: true,
   };
 
   componentDidMount() {
+    this.setState({ loading: true });
     legodbapi
       .getPartByCategoryId(this.props.route.params.id)
-      .then((parts) => this.setState({ listParts: parts }));
+      .then((parts) => this.setState({ listParts: parts, loading: false }));
   }
 
   showToastMessage = (text: string) => {
     toast.show(text, { type: "warning" });
   };
 
+  loadNextPage = () => {
+    this.state.pageNumber++;
+    const page = this.state.pageNumber;
+    const cat = this.props.route.params.id;
+
+    legodbapi.getPartByCategoryId(cat, 1, 25).then((parts) => {
+      if (parts.length > 0) {
+        this.setState({
+          listParts: [...this.state.listParts, ...parts],
+        });
+      }
+    });
+  };
+
   render() {
-    return (
-      <View style={styles.container}>
-        <ScrollView>
-          <Text style={styles.title}>{this.props.route.params.name}</Text>
-          <PartTilesList
-            parts={this.state.listParts}
-            onPartPress={this.showToastMessage}
+    if (this.state.loading) {
+      return (
+        <View>
+          <ActivityIndicator
+            color="tomato"
+            style={{ alignSelf: "center", marginTop: 40 }}
           />
-        </ScrollView>
-      </View>
-    );
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.container}>
+          <ScrollView>
+            <Text style={styles.title}>{this.props.route.params.name}</Text>
+            <PartTilesList
+              parts={this.state.listParts}
+              onPartPress={this.showToastMessage}
+            />
+          </ScrollView>
+        </View>
+      );
+    }
   }
 }
 
