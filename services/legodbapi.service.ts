@@ -60,9 +60,9 @@ class LegoDbApi {
   // ---- SETS ----
   // .recup un set en fonction de l'id du set
   getLegoSetById(id: string): Promise<LegoSet> {
-    return this.fetchSetFromApi(
-      `${rootEndpoint}/sets/${id}/?key=${key}`
-    ).then((set) => this.createLegoSet(set));
+    return this.fetchSetFromApi(`${rootEndpoint}/sets/${id}/?key=${key}`).then(
+      (set) => this.createLegoSet(set)
+    );
   }
   // .recup des sets en fonction de l'id du theme
   searchLegoSetByThemeId(
@@ -151,7 +151,7 @@ class LegoDbApi {
 
   getPartsCategories(): Promise<Array<PartCategory>> {
     return this.fetchPartsCategories(
-      `${rootEndpoint}/part_categories/?key=${key}`
+      `${rootEndpoint}/part_categories/?key=${key}&ordering=name`
     ).then((categories) => this.createPartCategories(categories));
   }
 
