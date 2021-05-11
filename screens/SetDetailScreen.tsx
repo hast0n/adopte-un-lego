@@ -3,15 +3,14 @@ import { StyleSheet, Text, View, Image, Linking, Modal } from "react-native";
 import { Divider } from "react-native-elements";
 import legodbapi from "../services/legodbapi.service";
 import LegoTheme from "../services/legotheme.model";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { ScrollView } from "react-native-gesture-handler";
 import LegoSet from "../services/legoset.model";
 import { SetDetailScreenProps } from "../navigation/app-stacks";
 import LegoPart from "../services/legopart.model";
 import Toast from "react-native-fast-toast";
 import LegoMinifig from "../services/legominifig.model";
-import MinifigTile from "../components/MinifigTile";
-import PartTile from "../components/PartTile";
 import PartTilesList from "../components/PartTilesList";
+import MinifigTilesList from "../components/MinifigTilesList";
 
 interface SetDetailScreenState {
   set: LegoSet;
@@ -159,14 +158,18 @@ export default class SetDetailScreen extends Component<
           <Divider style={styles.divider}></Divider>
         </View>
 
-        <View style={styles.sectionContent}>{this.renderMinifigs()}</View>
+        <View style={styles.sectionContent}>
+          <MinifigTilesList
+            minifigs={this.state.minifigs}
+            onMinifigPress={this.showToastMessage}
+          />
+        </View>
 
         <View style={styles.sectionTitle}>
           <Text style={styles.infoHint}>Parts included in this set</Text>
           <Divider style={styles.divider}></Divider>
         </View>
 
-        {/* <View style={styles.sectionContent}>{this.renderParts()}</View> */}
         <View style={styles.sectionContent}>
           <PartTilesList
             parts={this.state.parts}
@@ -185,112 +188,6 @@ export default class SetDetailScreen extends Component<
       </ScrollView>
     );
   }
-
-  // renderParts = () => {
-  //   const parts = this.state.parts;
-  //   if (parts.length > 0) {
-  //     return (
-  //       <View style={styles.partStack}>
-  //         {[...this.state.parts].map((part, i) => {
-  //           //return this.renderPart(part);
-  //           return (
-  //             <PartTile
-  //               part={part}
-  //               onPartPress={this.showToastMessage}
-  //               key={part.ID + i}
-  //             />
-  //           );
-  //         })}
-  //       </View>
-  //     );
-  //   } else {
-  //     return (
-  //       <View>
-  //         <Text style={{ fontStyle: "italic" }}>No parts to display...</Text>
-  //       </View>
-  //     );
-  //   }
-  //};
-
-  // renderPart = (part: LegoPart) => {
-  //   return (
-  //     <TouchableOpacity
-  //       key={part.ID + Math.random()}
-  //       onPress={() => this.showToastMessage(part.Name)}
-  //     >
-  //       <Image
-  //         source={{ uri: part.ImgUrl }}
-  //         style={styles.partImg}
-  //         resizeMethod={"scale"}
-  //         resizeMode={"contain"}
-  //       ></Image>
-
-  //       <View style={{ flexDirection: "row", width: 70 }}>
-  //         <Text style={styles.partQuantity}>x{part.quantity}</Text>
-  //         {/* <Text
-  //           numberOfLines={1}
-  //           ellipsizeMode="tail"
-  //           style={{ marginRight: 10 }}
-  //         >
-  //           {part.Name}
-  //         </Text> */}
-  //       </View>
-  //     </TouchableOpacity>
-  //   );
-  // };
-
-  renderMinifigs = () => {
-    const minifigs = this.state.minifigs;
-    if (minifigs.length > 0) {
-      return (
-        <View style={styles.partStack}>
-          {[...this.state.minifigs].map((fig, i) => {
-            //return this.renderMinifig(fig);
-            return (
-              <MinifigTile
-                fig={fig}
-                key={fig.ID + i}
-                showToastMessage={this.showToastMessage}
-              />
-            );
-          })}
-        </View>
-      );
-    } else {
-      return (
-        <View>
-          <Text style={{ fontStyle: "italic" }}>No minifig to display...</Text>
-        </View>
-      );
-    }
-  };
-
-  // renderMinifig = (fig: LegoMinifig) => {
-  //   return (
-  //     <TouchableOpacity
-  //       key={fig.ID + Math.random()}
-  //       onPress={() => this.showToastMessage(fig.Name)}
-  //     >
-  //       <Image
-  //         source={{ uri: fig.ImgUrl }}
-  //         style={styles.partImg}
-  //         resizeMethod={"scale"}
-  //         resizeMode={"contain"}
-  //       ></Image>
-
-  //       <View style={{ flexDirection: "row", width: 70 }}>
-  //         <Text style={styles.partQuantity}>x{fig.quantity}</Text>
-  //         <Text
-  //           numberOfLines={1}
-  //           ellipsizeMode="tail"
-  //           style={{ marginRight: 10 }}
-  //         >
-  //           {fig.Name}
-  //         </Text>
-  //       </View>
-  //     </TouchableOpacity>
-  //   );
-  // };
 
   // Part details modal: disabled - replaced by toast message
 
@@ -372,14 +269,6 @@ const styles = StyleSheet.create({
     fontSize: 21,
     marginBottom: 0,
     fontWeight: "bold",
-  },
-  partStack: {
-    flex: 1,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    alignContent: "flex-start",
-    justifyContent: "space-between",
-    marginTop: 10,
   },
 });
 
