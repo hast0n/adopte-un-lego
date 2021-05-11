@@ -110,7 +110,7 @@ class LegoDbApi {
     size: number = 100
   ): Promise<Array<LegoMinifig>> {
     return this.fetchFigsFromApi(
-      `${rootEndpoint}/minifigs/?key=${key}&search=${term}&page_size=${size}`
+      `${rootEndpoint}/minifigs/?key=${key}&search=${term}&page_size=${size}&page=${page}`
     ).then((figs) => this.createMinifigs(figs));
   }
   // .recup 1 minifig en fonction de son id

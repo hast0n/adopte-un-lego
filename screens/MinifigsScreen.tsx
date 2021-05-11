@@ -30,6 +30,8 @@ export default class MinifigsScreen extends Component<
     legodbapi.getAllLegoMinifigs().then((minifigs) => {
       this.setState({
         minifigList: minifigs,
+        currentSearch: "",
+        pageNumber: 1,
       });
     });
   };
@@ -40,7 +42,10 @@ export default class MinifigsScreen extends Component<
 
   onSearchSubmit = (text: string) => {
     legodbapi.searchLegoMinifigByTerm(text).then((result) => {
-      this.setState({ minifigList: result, currentSearch: text });
+      this.setState({
+        minifigList: result,
+        currentSearch: text,
+      });
     });
   };
 
@@ -69,11 +74,11 @@ export default class MinifigsScreen extends Component<
 
   loadNextPage = () => {
     this.state.pageNumber++;
-
     const search = this.state.currentSearch;
     const page = this.state.pageNumber;
 
     if (this.state.currentSearch != "") {
+      console.log(page);
       legodbapi.searchLegoMinifigByTerm(search, page, 25).then((minifigs) => {
         if (minifigs.length > 0) {
           this.setState({
