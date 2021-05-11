@@ -23,7 +23,9 @@ export default class PartTile extends Component<PartTileProps, {}> {
         ></Image>
 
         <View style={{ flexDirection: "row", width: 70 }}>
-          <Text style={styles.partQuantity}>x{this.props.part.quantity}</Text>
+          {this.props.part.quantity !== undefined ? (
+            <Text style={styles.partQuantity}>x{this.props.part.quantity}</Text>
+          ) : null}
           <Text
             numberOfLines={1}
             ellipsizeMode="tail"
