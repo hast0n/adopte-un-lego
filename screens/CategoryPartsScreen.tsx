@@ -19,14 +19,13 @@ export default class CategoryPartsScreen extends Component<
   componentDidMount() {
     legodbapi
       .getPartByCategoryId(this.props.route.params.id)
-      .then((parts) => console.log(parts));
-    //.then((parts) => this.setState({ listParts: parts }));
+      .then((parts) => this.setState({ listParts: parts }));
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <Text>categoryyy partsss</Text>
+        <Text style={styles.title}>{this.props.route.params.name}</Text>
       </View>
     );
   }
@@ -37,7 +36,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "flex-start",
     paddingTop: 20,
+  },
+  title: {
+    alignSelf: "flex-start",
+    color: "tomato",
+    fontSize: 16,
+    marginHorizontal: 22,
+    marginBottom: 10,
   },
 });
