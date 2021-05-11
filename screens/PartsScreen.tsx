@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, ActivityIndicator, Text } from "react-native";
 import { PartsScreenProps } from "../navigation/app-stacks";
 import PartCategory from "../services/partcategory.model";
 import legodbapi from "../services/legodbapi.service";
@@ -8,6 +8,7 @@ import { Divider } from "react-native-elements";
 
 interface PartsScreenState {
   listCategories: Array<PartCategory>;
+  loading: boolean;
 }
 
 export default class PartsScreen extends Component<
@@ -16,11 +17,12 @@ export default class PartsScreen extends Component<
 > {
   state: PartsScreenState = {
     listCategories: [],
+    loading: true,
   };
 
   componentDidMount() {
     legodbapi.getPartsCategories().then((categories) => {
-      this.setState({ listCategories: categories });
+      this.setState({ listCategories: categories, loading: false });
     });
   }
 
@@ -32,10 +34,20 @@ export default class PartsScreen extends Component<
   };
 
   render() {
+    if (this.state.loading) {
+      return (
+        <View>
+          {this.renderHeader()}
+          <ActivityIndicator
+            color="tomato"
+            style={{ alignSelf: "center", marginTop: 20 }}
+          />
+        </View>
+      );
+    }
     return (
       <View style={styles.container}>
-        <Text style={styles.hint}>Choose a part category</Text>
-        <Divider style={styles.divider} />
+        {this.renderHeader()}
         <PartCategoryFlatlist
           listCategories={this.state.listCategories}
           onPressCategory={this.onPressCategory}
@@ -43,6 +55,15 @@ export default class PartsScreen extends Component<
       </View>
     );
   }
+
+  renderHeader = () => {
+    return (
+      <View style={styles.header}>
+        <Text style={styles.hint}>Browse Lego part by cateogries below</Text>
+        <Divider style={styles.divider} />
+      </View>
+    );
+  };
 }
 
 const styles = StyleSheet.create({
@@ -63,5 +84,9 @@ const styles = StyleSheet.create({
     backgroundColor: "gray",
     height: 0.3,
     width: 370,
+  },
+  header: {
+    marginTop: 20,
+    alignItems: "center",
   },
 });
