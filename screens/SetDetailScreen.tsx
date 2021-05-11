@@ -229,10 +229,14 @@ export default class SetDetailScreen extends Component<
     if (minifigs.length > 0) {
       return (
         <View style={styles.partStack}>
-          {[...this.state.minifigs].map((fig) => {
+          {[...this.state.minifigs].map((fig, i) => {
             //return this.renderMinifig(fig);
             return (
-              <MinifigTile fig={fig} showToastMessage={this.showToastMessage} />
+              <MinifigTile
+                fig={fig}
+                key={fig.ID + i}
+                showToastMessage={this.showToastMessage}
+              />
             );
           })}
         </View>

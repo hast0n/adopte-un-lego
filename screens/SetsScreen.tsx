@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, FlatList, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import { Divider } from "react-native-elements";
 import { SetsScreenProps } from "../navigation/app-stacks";
 import legodbapi from "../services/legodbapi.service";
@@ -15,6 +22,7 @@ interface SetsScreenState {
   themeList: Array<LegoTheme>; // not supposed to be updated but might be more efficient to store it there ¯\_(ツ)_/¯
   currentSearch: string;
   pageNumber: number;
+  loading: boolean;
 }
 
 export default class SetsScreen extends Component<
@@ -26,6 +34,7 @@ export default class SetsScreen extends Component<
     themeList: [],
     currentSearch: "",
     pageNumber: 1,
+    loading: true,
   };
 
   allowedThemes: number[] = [
@@ -115,7 +124,18 @@ export default class SetsScreen extends Component<
   render() {
     const setList = this.state.setList;
     const search = this.state.currentSearch;
-    if (setList.length < 1 && search == "") {
+
+    if (this.state.loading) {
+      return (
+        <View>
+          {/* <SetsScreenHeader
+            onSearchSubmit={(text: string) => void}
+            bringBackThemes={() => void}
+          /> */}
+          <ActivityIndicator color="tomato" />
+        </View>
+      );
+    } else if (setList.length < 1 && search == "") {
       return (
         <View style={styles.container}>
           <SetsScreenHeader
