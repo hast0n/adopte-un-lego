@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, ActivityIndicator } from "react-native";
 import { ThemeSearchScreenProps } from "../navigation/app-stacks";
 import LegoTheme from "../services/legotheme.model";
 import LegoSet from "../services/legoset.model";
@@ -15,6 +15,7 @@ interface ThemeSearchScreenState {
   setList: Array<Set>;
   pageNumber: number;
   currentSearch: string;
+  loading: boolean;
 }
 
 export default class ThemeSearchScreen extends Component<
@@ -30,6 +31,7 @@ export default class ThemeSearchScreen extends Component<
     setList: [],
     pageNumber: 1,
     currentSearch: "",
+    loading: true,
   };
 
   componentDidMount() {
@@ -80,22 +82,44 @@ export default class ThemeSearchScreen extends Component<
   };
 
   onSearchSubmit = (text: string) => {
+    this.setState({ loading: true });
     legodbapi
       .searchLegoSetByThemeIdAndTerm(this.state.theme.ID, text)
       .then((result) => {
-        this.setState({ setList: result, currentSearch: text });
+        this.setState({ setList: result, currentSearch: text, loading: false });
       });
   };
 
   resetSetList = () => {
     legodbapi.searchLegoSetByThemeId(this.state.theme.ID).then((sets) => {
-      this.setState({ setList: sets });
+      this.setState({ setList: sets, loading: false });
     });
   };
 
   render() {
+    if (this.state.loading) {
+      return (
+        <View style={styles.container}>
+          {this.renderHeader()}
+          <ActivityIndicator
+            color="tomato"
+            style={{ alignSelf: "center", marginTop: 10 }}
+          />
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.container}>
+          {this.renderHeader()}
+          {this.renderSets()}
+        </View>
+      );
+    }
+  }
+
+  renderHeader = () => {
     return (
-      <View style={styles.container}>
+      <>
         <Text style={styles.title}>
           Results for theme:{" "}
           <Text style={{ textDecorationLine: "underline" }}>
@@ -110,11 +134,9 @@ export default class ThemeSearchScreen extends Component<
           showDismissButton={true}
         />
         <Divider style={styles.divider}></Divider>
-
-        {this.renderSets()}
-      </View>
+      </>
     );
-  }
+  };
 
   renderSets = () => {
     if (this.state.setList.length > 0) {
