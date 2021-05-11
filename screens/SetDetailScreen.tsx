@@ -1,5 +1,13 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Image, Linking, Modal } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Linking,
+  Modal,
+  ActivityIndicator,
+} from "react-native";
 import { Divider } from "react-native-elements";
 import legodbapi from "../services/legodbapi.service";
 import LegoTheme from "../services/legotheme.model";
@@ -17,6 +25,7 @@ interface SetDetailScreenState {
   theme: LegoTheme;
   parts: LegoPart[];
   minifigs: LegoMinifig[];
+  partsLoading: boolean;
   // modalVisible: boolean;
   // selectedPartID: string;
 }
@@ -43,6 +52,7 @@ export default class SetDetailScreen extends Component<
     },
     parts: [],
     minifigs: [],
+    partsLoading: true,
     // modalVisible: false,
     // selectedPartID: undefined,
   };
@@ -58,7 +68,7 @@ export default class SetDetailScreen extends Component<
       legodbapi
         .getPartsBySetID(legoSet.ID, legoSet.NumParts)
         .then((legoParts) => {
-          this.setState({ parts: legoParts });
+          this.setState({ parts: legoParts, partsLoading: false });
         });
     });
 
@@ -171,10 +181,17 @@ export default class SetDetailScreen extends Component<
         </View>
 
         <View style={styles.sectionContent}>
-          <PartTilesList
-            parts={this.state.parts}
-            onPartPress={this.showToastMessage}
-          />
+          {this.state.partsLoading ? (
+            <ActivityIndicator
+              color="tomato"
+              style={{ alignSelf: "center", marginTop: 20 }}
+            />
+          ) : (
+            <PartTilesList
+              parts={this.state.parts}
+              onPartPress={this.showToastMessage}
+            />
+          )}
         </View>
 
         {/* <Modal

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, ActivityIndicator } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import PartTilesList from "../components/PartTilesList";
 import { CategoryPartsScreenProps } from "../navigation/app-stacks";
@@ -8,6 +8,7 @@ import LegoPart from "../services/legopart.model";
 
 interface CategoryPartsScreenState {
   listParts: Array<LegoPart>;
+  loading: boolean;
 }
 
 export default class CategoryPartsScreen extends Component<
@@ -16,12 +17,13 @@ export default class CategoryPartsScreen extends Component<
 > {
   state: CategoryPartsScreenState = {
     listParts: [],
+    loading: true,
   };
 
   componentDidMount() {
     legodbapi
       .getPartByCategoryId(this.props.route.params.id)
-      .then((parts) => this.setState({ listParts: parts }));
+      .then((parts) => this.setState({ listParts: parts, loading: false }));
   }
 
   showToastMessage = (text: string) => {
@@ -33,10 +35,17 @@ export default class CategoryPartsScreen extends Component<
       <View style={styles.container}>
         <ScrollView>
           <Text style={styles.title}>{this.props.route.params.name}</Text>
-          <PartTilesList
-            parts={this.state.listParts}
-            onPartPress={this.showToastMessage}
-          />
+          {this.state.loading ? (
+            <ActivityIndicator
+              color="tomato"
+              style={{ alignSelf: "center", marginTop: 20 }}
+            />
+          ) : (
+            <PartTilesList
+              parts={this.state.listParts}
+              onPartPress={this.showToastMessage}
+            />
+          )}
         </ScrollView>
       </View>
     );
