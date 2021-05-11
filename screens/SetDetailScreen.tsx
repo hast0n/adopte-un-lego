@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Image, Linking, Modal } from "react-native";
+import { StyleSheet, Text, View, Modal, ActivityIndicator } from "react-native";
 import { Divider } from "react-native-elements";
 import legodbapi from "../services/legodbapi.service";
 import LegoTheme from "../services/legotheme.model";
@@ -11,12 +11,15 @@ import Toast from "react-native-fast-toast";
 import LegoMinifig from "../services/legominifig.model";
 import PartTilesList from "../components/PartTilesList";
 import MinifigTilesList from "../components/MinifigTilesList";
+import SetInformationBlock from "../components/SetInformationBlock";
+import SetPresentationBlock from "../components/SetPresentationBlock";
 
 interface SetDetailScreenState {
   set: LegoSet;
   theme: LegoTheme;
   parts: LegoPart[];
   minifigs: LegoMinifig[];
+  partsLoading: boolean;
   // modalVisible: boolean;
   // selectedPartID: string;
 }
@@ -43,6 +46,7 @@ export default class SetDetailScreen extends Component<
     },
     parts: [],
     minifigs: [],
+    partsLoading: true,
     // modalVisible: false,
     // selectedPartID: undefined,
   };
@@ -58,7 +62,7 @@ export default class SetDetailScreen extends Component<
       legodbapi
         .getPartsBySetID(legoSet.ID, legoSet.NumParts)
         .then((legoParts) => {
-          this.setState({ parts: legoParts });
+          this.setState({ parts: legoParts, partsLoading: false });
         });
     });
 
@@ -92,66 +96,15 @@ export default class SetDetailScreen extends Component<
   render() {
     const set = this.state.set;
     const theme = this.state.theme;
-    const parts = this.state.parts;
     return (
       <ScrollView style={styles.container}>
-        <View style={[styles.sectionContent, { marginTop: 15 }]}>
-          <Image
-            style={styles.picture}
-            source={{ uri: set.ImgUrl }}
-            resizeMethod={"scale"}
-            resizeMode={"contain"}
-          ></Image>
-          <View>
-            <View style={styles.mainInfo}>
-              <View style={{ flex: 0.6 }}>
-                <Text style={styles.title}>{set.Name}</Text>
-                <Text style={styles.id}>ID: {set.ID}</Text>
-              </View>
-              <Image
-                style={styles.logo}
-                source={{
-                  uri: legodbapi.getThemeLogoUrlById(theme.ID),
-                }}
-                resizeMethod={"scale"}
-                resizeMode={"contain"}
-              ></Image>
-            </View>
-          </View>
-        </View>
+        <SetPresentationBlock set={set} theme={theme} />
 
         <View style={styles.sectionTitle}>
           <Text style={styles.infoHint}>Information about this set</Text>
           <Divider style={styles.divider}></Divider>
         </View>
-
-        <View style={styles.sectionContent}>
-          <View
-            style={{
-              height: 90,
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={styles.key}>
-              Nuber of parts in this set:
-              <Text style={styles.value}> {set.NumParts}</Text>
-            </Text>
-            <Text style={styles.key}>
-              Release year:
-              <Text style={styles.value}> {set.Year}</Text>
-            </Text>
-            <Text style={styles.key}>
-              Series:
-              <Text style={styles.value}> {theme.Name}</Text>
-            </Text>
-            <Text
-              style={styles.link}
-              onPress={() => Linking.openURL(set.SetUrl)}
-            >
-              See more info on Rebrickable...
-            </Text>
-          </View>
-        </View>
+        <SetInformationBlock set={set} theme={theme} />
 
         <View style={styles.sectionTitle}>
           <Text style={styles.infoHint}>Minifigs included in this set</Text>
@@ -171,10 +124,17 @@ export default class SetDetailScreen extends Component<
         </View>
 
         <View style={styles.sectionContent}>
-          <PartTilesList
-            parts={this.state.parts}
-            onPartPress={this.showToastMessage}
-          />
+          {this.state.partsLoading ? (
+            <ActivityIndicator
+              color="tomato"
+              style={{ alignSelf: "center", marginTop: 20 }}
+            />
+          ) : (
+            <PartTilesList
+              parts={this.state.parts}
+              onPartPress={this.showToastMessage}
+            />
+          )}
         </View>
 
         {/* <Modal
@@ -209,48 +169,11 @@ export default class SetDetailScreen extends Component<
 
 const styles = StyleSheet.create({
   container: { backgroundColor: "rgb(250, 250, 250)" },
-  picture: {
-    flex: 1,
-    minHeight: 300,
-    width: "100%",
-    alignSelf: "stretch",
-  },
-  mainInfo: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    margin: 10,
-  },
-  title: {
-    fontSize: 25,
-    fontWeight: "bold",
-  },
   divider: {
     backgroundColor: "gray",
     height: 0.3,
     width: 392,
     margin: 3,
-  },
-  logo: {
-    flex: 0.5,
-    height: "100%",
-    alignSelf: "center",
-  },
-  id: {
-    fontStyle: "italic",
-    color: "gray",
-  },
-  link: {
-    color: "blue",
-    marginTop: 5,
-    textDecorationLine: "underline",
-  },
-  key: {
-    fontSize: 15,
-  },
-  value: {
-    fontSize: 15,
-    fontWeight: "bold",
-    fontStyle: "italic",
   },
   sectionTitle: {
     padding: 10,

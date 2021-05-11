@@ -34,58 +34,49 @@ export default class PartsScreen extends Component<
   };
 
   render() {
-    if (this.state.loading) {
-      return (
-        <View>
-          {this.renderHeader()}
+    return (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.hint}>Browse Lego part by cateogries below</Text>
+          <Divider style={styles.divider} />
+        </View>
+        {this.state.loading ? (
           <ActivityIndicator
             color="tomato"
             style={{ alignSelf: "center", marginTop: 20 }}
           />
-        </View>
-      );
-    }
-    return (
-      <View style={styles.container}>
-        {this.renderHeader()}
-        <PartCategoryFlatlist
-          listCategories={this.state.listCategories}
-          onPressCategory={this.onPressCategory}
-        />
+        ) : (
+          <PartCategoryFlatlist
+            listCategories={this.state.listCategories}
+            onPressCategory={this.onPressCategory}
+          />
+        )}
       </View>
     );
   }
-
-  renderHeader = () => {
-    return (
-      <View style={styles.header}>
-        <Text style={styles.hint}>Browse Lego part by cateogries below</Text>
-        <Divider style={styles.divider} />
-      </View>
-    );
-  };
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+    alignItems: "center",
+    paddingTop: 10,
+  },
+  hint: {
+    marginHorizontal: 20,
+    marginBottom: 10,
+    fontSize: 18,
+    color: "gray",
   },
   divider: {
-    marginVertical: 20,
+    marginVertical: 10,
     backgroundColor: "gray",
     height: 0.3,
     width: 370,
   },
-  hint: {
-    marginHorizontal: 10,
-    marginBottom: 10,
-    textAlign: "center",
-    fontSize: 18,
-    color: "gray",
-  },
   header: {
-    marginTop: 20,
+    marginTop: 10,
     alignItems: "center",
   },
 });

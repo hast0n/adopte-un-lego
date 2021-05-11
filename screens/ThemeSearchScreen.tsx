@@ -1,14 +1,13 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet, ActivityIndicator } from "react-native";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { ThemeSearchScreenProps } from "../navigation/app-stacks";
 import LegoTheme from "../services/legotheme.model";
 import LegoSet from "../services/legoset.model";
 import Set from "../services/legoset.model";
 import legodbapi from "../services/legodbapi.service";
 import SetFlatlist from "../components/SetFlatlist";
-import Input from "../components/Input";
-import { Divider } from "react-native-elements/dist/divider/Divider";
 import NoResults from "../components/NoResults";
+import ThemeSearchScreenHeader from "../components/ThemeSearchScreenHeader";
 
 interface ThemeSearchScreenState {
   theme: LegoTheme;
@@ -97,46 +96,24 @@ export default class ThemeSearchScreen extends Component<
   };
 
   render() {
-    if (this.state.loading) {
-      return (
-        <View style={styles.container}>
-          {this.renderHeader()}
+    return (
+      <View style={styles.container}>
+        <ThemeSearchScreenHeader
+          themeName={this.state.theme.Name}
+          onSearchReset={this.onSearchReset}
+          onSearchSubmit={this.onSearchSubmit}
+        />
+        {this.state.loading ? (
           <ActivityIndicator
             color="tomato"
             style={{ alignSelf: "center", marginTop: 10 }}
           />
-        </View>
-      );
-    } else {
-      return (
-        <View style={styles.container}>
-          {this.renderHeader()}
-          {this.renderSets()}
-        </View>
-      );
-    }
-  }
-
-  renderHeader = () => {
-    return (
-      <>
-        <Text style={styles.title}>
-          Results for theme:{" "}
-          <Text style={{ textDecorationLine: "underline" }}>
-            {this.state.theme.Name}
-          </Text>
-        </Text>
-        <Input
-          placeholder={`Search a ${this.state.theme.Name} related set `}
-          clearAfterSubmit={false}
-          onSubmitEditing={this.onSearchSubmit}
-          onDismissPress={this.onSearchReset}
-          showDismissButton={true}
-        />
-        <Divider style={styles.divider}></Divider>
-      </>
+        ) : (
+          this.renderSets()
+        )}
+      </View>
     );
-  };
+  }
 
   renderSets = () => {
     if (this.state.setList.length > 0) {
@@ -160,18 +137,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     paddingTop: 20,
-  },
-  divider: {
-    marginVertical: 20,
-    backgroundColor: "gray",
-    height: 0.3,
-    width: 370,
-  },
-  title: {
-    alignSelf: "flex-start",
-    color: "tomato",
-    fontSize: 18,
-    marginHorizontal: 22,
-    marginBottom: 10,
   },
 });

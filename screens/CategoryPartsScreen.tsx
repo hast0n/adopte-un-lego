@@ -8,7 +8,6 @@ import LegoPart from "../services/legopart.model";
 
 interface CategoryPartsScreenState {
   listParts: Array<LegoPart>;
-  pageNumber: number;
   loading: boolean;
 }
 
@@ -18,7 +17,6 @@ export default class CategoryPartsScreen extends Component<
 > {
   state: CategoryPartsScreenState = {
     listParts: [],
-    pageNumber: 1,
     loading: true,
   };
 
@@ -33,43 +31,25 @@ export default class CategoryPartsScreen extends Component<
     toast.show(text, { type: "warning" });
   };
 
-  loadNextPage = () => {
-    this.state.pageNumber++;
-    const page = this.state.pageNumber;
-    const cat = this.props.route.params.id;
-
-    legodbapi.getPartByCategoryId(cat, 1, 25).then((parts) => {
-      if (parts.length > 0) {
-        this.setState({
-          listParts: [...this.state.listParts, ...parts],
-        });
-      }
-    });
-  };
-
   render() {
-    if (this.state.loading) {
-      return (
-        <View>
-          <ActivityIndicator
-            color="tomato"
-            style={{ alignSelf: "center", marginTop: 40 }}
-          />
-        </View>
-      );
-    } else {
-      return (
-        <View style={styles.container}>
-          <ScrollView>
-            <Text style={styles.title}>{this.props.route.params.name}</Text>
+    return (
+      <View style={styles.container}>
+        <ScrollView>
+          <Text style={styles.title}>{this.props.route.params.name}</Text>
+          {this.state.loading ? (
+            <ActivityIndicator
+              color="tomato"
+              style={{ alignSelf: "center", marginTop: 20 }}
+            />
+          ) : (
             <PartTilesList
               parts={this.state.listParts}
               onPartPress={this.showToastMessage}
             />
-          </ScrollView>
-        </View>
-      );
-    }
+          )}
+        </ScrollView>
+      </View>
+    );
   }
 }
 
