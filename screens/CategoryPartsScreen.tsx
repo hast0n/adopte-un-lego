@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Text, View, StyleSheet } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import PartTilesList from "../components/PartTilesList";
 import { CategoryPartsScreenProps } from "../navigation/app-stacks";
 import legodbapi from "../services/legodbapi.service";
 import LegoPart from "../services/legopart.model";
@@ -22,10 +24,20 @@ export default class CategoryPartsScreen extends Component<
       .then((parts) => this.setState({ listParts: parts }));
   }
 
+  showToastMessage = (text: string) => {
+    toast.show(text, { type: "warning" });
+  };
+
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>{this.props.route.params.name}</Text>
+        <ScrollView>
+          <Text style={styles.title}>{this.props.route.params.name}</Text>
+          <PartTilesList
+            parts={this.state.listParts}
+            onPartPress={this.showToastMessage}
+          />
+        </ScrollView>
       </View>
     );
   }
@@ -37,6 +49,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     paddingTop: 20,
+    paddingHorizontal: 10,
   },
   title: {
     alignSelf: "flex-start",

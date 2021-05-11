@@ -10,6 +10,8 @@ import LegoPart from "../services/legopart.model";
 import Toast from "react-native-fast-toast";
 import LegoMinifig from "../services/legominifig.model";
 import MinifigTile from "../components/MinifigTile";
+import PartTile from "../components/PartTile";
+import PartTilesList from "../components/PartTilesList";
 
 interface SetDetailScreenState {
   set: LegoSet;
@@ -164,7 +166,13 @@ export default class SetDetailScreen extends Component<
           <Divider style={styles.divider}></Divider>
         </View>
 
-        <View style={styles.sectionContent}>{this.renderParts()}</View>
+        {/* <View style={styles.sectionContent}>{this.renderParts()}</View> */}
+        <View style={styles.sectionContent}>
+          <PartTilesList
+            parts={this.state.parts}
+            onPartPress={this.showToastMessage}
+          />
+        </View>
 
         {/* <Modal
               animationType="slide"
@@ -178,51 +186,58 @@ export default class SetDetailScreen extends Component<
     );
   }
 
-  renderParts = () => {
-    const parts = this.state.parts;
-    if (parts.length > 0) {
-      return (
-        <View style={styles.partStack}>
-          {[...this.state.parts].map((part) => {
-            return this.renderPart(part);
-          })}
-        </View>
-      );
-    } else {
-      return (
-        <View>
-          <Text style={{ fontStyle: "italic" }}>No parts to display...</Text>
-        </View>
-      );
-    }
-  };
+  // renderParts = () => {
+  //   const parts = this.state.parts;
+  //   if (parts.length > 0) {
+  //     return (
+  //       <View style={styles.partStack}>
+  //         {[...this.state.parts].map((part, i) => {
+  //           //return this.renderPart(part);
+  //           return (
+  //             <PartTile
+  //               part={part}
+  //               onPartPress={this.showToastMessage}
+  //               key={part.ID + i}
+  //             />
+  //           );
+  //         })}
+  //       </View>
+  //     );
+  //   } else {
+  //     return (
+  //       <View>
+  //         <Text style={{ fontStyle: "italic" }}>No parts to display...</Text>
+  //       </View>
+  //     );
+  //   }
+  //};
 
-  renderPart = (part: LegoPart) => {
-    return (
-      <TouchableOpacity
-        key={part.ID + Math.random()}
-        onPress={() => this.showToastMessage(part.Name)}
-      >
-        <Image
-          source={{ uri: part.ImgUrl }}
-          style={styles.partImg}
-          resizeMethod={"scale"}
-          resizeMode={"contain"}
-        ></Image>
+  // renderPart = (part: LegoPart) => {
+  //   return (
+  //     <TouchableOpacity
+  //       key={part.ID + Math.random()}
+  //       onPress={() => this.showToastMessage(part.Name)}
+  //     >
+  //       <Image
+  //         source={{ uri: part.ImgUrl }}
+  //         style={styles.partImg}
+  //         resizeMethod={"scale"}
+  //         resizeMode={"contain"}
+  //       ></Image>
 
-        <View style={{ flexDirection: "row", width: 70 }}>
-          <Text style={styles.partQuantity}>x{part.quantity}</Text>
-          {/* <Text
-            numberOfLines={1}
-            ellipsizeMode="tail"
-            style={{ marginRight: 10 }}
-          >
-            {part.Name}
-          </Text> */}
-        </View>
-      </TouchableOpacity>
-    );
-  };
+  //       <View style={{ flexDirection: "row", width: 70 }}>
+  //         <Text style={styles.partQuantity}>x{part.quantity}</Text>
+  //         {/* <Text
+  //           numberOfLines={1}
+  //           ellipsizeMode="tail"
+  //           style={{ marginRight: 10 }}
+  //         >
+  //           {part.Name}
+  //         </Text> */}
+  //       </View>
+  //     </TouchableOpacity>
+  //   );
+  // };
 
   renderMinifigs = () => {
     const minifigs = this.state.minifigs;
@@ -365,17 +380,6 @@ const styles = StyleSheet.create({
     alignContent: "flex-start",
     justifyContent: "space-between",
     marginTop: 10,
-  },
-  partImg: {
-    height: 80,
-    width: 80,
-  },
-  partQuantity: {
-    flex: 0,
-    paddingHorizontal: 6,
-    borderRadius: 100,
-    backgroundColor: "lightgray",
-    marginBottom: 15,
   },
 });
 

@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, FlatList, Image, Linking } from "react-native";
+import { StyleSheet, Text, View, Image, Linking } from "react-native";
 import { Divider } from "react-native-elements";
 import legodbapi from "../services/legodbapi.service";
 import LegoTheme from "../services/legotheme.model";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { ScrollView } from "react-native-gesture-handler";
 import LegoMinifig from "../services/legominifig.model";
 import LegoPart from "../services/legopart.model";
 import { MinifigDetailScreenProps } from "../navigation/app-stacks";
