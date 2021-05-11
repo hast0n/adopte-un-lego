@@ -7,6 +7,7 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import LegoMinifig from "../services/legominifig.model";
 import LegoPart from "../services/legopart.model";
 import { MinifigDetailScreenProps } from "../navigation/app-stacks";
+import PartTile from "../components/PartTile";
 
 interface MinifigDetailScreenState {
   minifig: LegoMinifig;
@@ -100,8 +101,15 @@ export default class MinifigDetailScreen extends Component<
           <Divider style={styles.divider}></Divider>
 
           <View style={styles.partStack}>
-            {[...this.state.parts].map((part) => {
-              return this.renderPart(part);
+            {[...this.state.parts].map((part, i) => {
+              //return this.renderPart(part);
+              return (
+                <PartTile
+                  part={part}
+                  onPartPress={this.onPartPress}
+                  key={part.ID + i}
+                />
+              );
             })}
             {/* <Modal
               animationType="slide"
@@ -117,32 +125,32 @@ export default class MinifigDetailScreen extends Component<
     );
   }
 
-  renderPart = (part: LegoPart) => {
-    return (
-      <TouchableOpacity
-        key={part.ID + Math.random()}
-        onPress={() => this.onPartPress(part.Name)}
-      >
-        <Image
-          source={{ uri: part.ImgUrl }}
-          style={styles.partImg}
-          resizeMethod={"scale"}
-          resizeMode={"contain"}
-        ></Image>
+  //   renderPart = (part: LegoPart) => {
+  //     return (
+  //       <TouchableOpacity
+  //         key={part.ID + Math.random()}
+  //         onPress={() => this.onPartPress(part.Name)}
+  //       >
+  //         <Image
+  //           source={{ uri: part.ImgUrl }}
+  //           style={styles.partImg}
+  //           resizeMethod={"scale"}
+  //           resizeMode={"contain"}
+  //         ></Image>
 
-        <View style={{ flexDirection: "row", width: 70 }}>
-          <Text style={styles.partQuantity}>x{part.quantity}</Text>
-          <Text
-            numberOfLines={1}
-            ellipsizeMode="tail"
-            style={{ marginRight: 10 }}
-          >
-            {part.Name}
-          </Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
+  //         <View style={{ flexDirection: "row", width: 70 }}>
+  //           <Text style={styles.partQuantity}>x{part.quantity}</Text>
+  //           <Text
+  //             numberOfLines={1}
+  //             ellipsizeMode="tail"
+  //             style={{ marginRight: 10 }}
+  //           >
+  //             {part.Name}
+  //           </Text>
+  //         </View>
+  //       </TouchableOpacity>
+  //     );
+  //   };
 }
 
 const styles = StyleSheet.create({
